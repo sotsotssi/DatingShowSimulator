@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="ko" class="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dating Show Simulator</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Tailwind Configuration for Custom Colors/Fonts -->
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#FF4785', // 핑크
+                        secondary: '#6C63FF', // 보라
+                        darkbg: '#1a1b26',
+                        darkcard: '#24283b',
+                    },
+                    fontFamily: {
+                        sans: ['Pretendard', 'Apple SD Gothic Neo', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Google Fonts & Icons -->
+    <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.8/dist/web/static/pretendard.css" />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
+    <style>
+        /* 커스텀 스크롤바 */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
+        .dark ::-webkit-scrollbar-thumb { background: #475569; }
+        
+        /* 탭 전환 애니메이션 */
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Details Summary 스타일 커스텀 */
+        details > summary {
+            list-style: none;
+        }
+        details > summary::-webkit-details-marker {
+            display: none;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800 dark:bg-darkbg dark:text-gray-100 transition-colors duration-300 font-sans h-screen flex flex-col overflow-hidden">
+
+    <!-- Header -->
+    <header class="flex justify-between items-center px-6 py-4 bg-white/80 dark:bg-darkcard/80 backdrop-blur-md shadow-sm z-10 sticky top-0 shrink-0">
+        <div class="flex items-center gap-2">
+            <span class="material-icons-round text-primary text-3xl">favorite</span>
+            <h1 class="text-xl font-bold tracking-tight bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">Dating Show Simulator</h1>
+        </div>
+        <div class="flex items-center gap-4">
+            <div id="dayDisplay" class="px-3 py-1 bg-gray-100 dark:bg-gray-700 rounded-full text-sm font-semibold">
+                Day <span id="currentDay">0</span>
+            </div>
+            <button id="themeToggle" class="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-600 transition">
+                <span class="material-icons-round dark:hidden">dark_mode</span>
+                <span class="material-icons-round hidden dark:block text-yellow-400">light_mode</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="flex-1 overflow-y-auto p-4 pb-24 max-w-7xl mx-auto w-full relative flex flex-col gap-4">
+        
+        <!-- Global Control Bar -->
+        <div class="flex justify-between items-center bg-white dark:bg-darkcard p-4 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 shrink-0 sticky top-0 z-20">
+            <div class="text-sm font-medium">현재 진행도: <span id="progressText">준비 중</span></div>
+            <div class="flex gap-2">
+                <button id="nextDayBtn" onclick="processNextDay()" class="bg-gradient-to-r from-secondary to-primary text-white px-6 py-2 rounded-full font-bold shadow-lg hover:shadow-xl transition transform active:scale-95 flex items-center gap-2">
+                    다음 날 진행 <span class="material-icons-round text-sm">arrow_forward</span>
+                </button>
+                <button id="restartBtn" onclick="restartSimulation()" class="hidden bg-gray-500 text-white px-6 py-2 rounded-full font-bold shadow-lg hover:shadow-xl transition transform active:scale-95 flex items-center gap-2">
+                    다시 시작 <span class="material-icons-round text-sm">refresh</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Tab 1: 참가자 관리 (Roster) -->
+        <section id="tab-roster" class="tab-content active space-y-6">
+            <!-- Setup & Add Character Card -->
+            <div id="setupPanel" class="bg-white dark:bg-darkcard rounded-2xl p-6 shadow-lg border border-gray-100 dark:border-gray-700 max-w-4xl mx-auto">
+                <div class="flex justify-between items-center mb-6 border-b border-gray-100 dark:border-gray-700 pb-4">
+                    <h2 class="text-lg font-bold flex items-center gap-2">
+                        <span class="material-icons-round text-secondary">settings</span> 시뮬레이션 설정
+                    </h2>
+                </div>
+
+                <!-- Global Config Inputs -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                    <div class="flex flex-col gap-1">
+                        <label class="text-xs font-bold text-gray-500">최대 진행 일수</label>
+                        <input type="number" id="inputMaxDays" placeholder="권장: 80일 / 비워두면 무제한" class="p-3 rounded-xl bg-gray-50 dark:bg-gray-800 border-none focus:ring-2 focus:ring-primary outline-none transition">
+                    </div>
+                    <div class="flex items-center gap-2 p-3 bg-gray-50 dark:bg-gray-800 rounded-xl">
+                        <input type="checkbox" id="chkCoupleExit" checked class="w-5 h-5 text-primary rounded focus:ring-primary">
+                        <label for="chkCoupleExit" class="text-sm font-medium cursor-pointer">커플 성사 시 졸업</label>
+                    </div>
+                    <div class="flex items-center gap-2 p-3 bg-gray-50 dark:bg-gray-800 rounded-xl">
+                        <input type="checkbox" id="chkAllowAffair" class="w-5 h-5 text-primary rounded focus:ring-primary">
+                        <label for="chkAllowAffair" class="text-sm font-medium cursor-pointer">커플 상태에서 외도 허용</label>
+                    </div>
+                </div>
+
+                <hr class="border-gray-100 dark:border-gray-700 mb-6">
+
+                <h2 class="text-lg font-bold mb-4 flex items-center gap-2">
+                    <span class="material-icons-round text-secondary">person_add</span> 참가자 등록
+                    <span class="text-xs font-normal text-gray-500 ml-auto" id="charCount">0/14</span>
+                </h2>
+                
+                <input type="hidden" id="editId" value="">
+
+                <div class="grid grid-cols-2 gap-4 mb-4">
+                    <input type="text" id="inputName" placeholder="이름" class="col-span-1 p-3 rounded-xl bg-gray-50 dark:bg-gray-800 border-none focus:ring-2 focus:ring-primary outline-none transition">
+                    <select id="inputMbti" class="col-span-1 p-3 rounded-xl bg-gray-50 dark:bg-gray-800 border-none focus:ring-2 focus:ring-primary outline-none transition">
+                        <!-- JS로 옵션 채움 -->
+                    </select>
+                </div>
+                
+                <div class="grid grid-cols-3 gap-2 mb-6">
+                    <div class="space-y-1">
+                        <label class="text-xs text-gray-500">매력 <span id="valCharm">5</span></label>
+                        <input type="range" id="rangeCharm" min="1" max="10" value="5" class="w-full accent-primary h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer">
+                    </div>
+                    <div class="space-y-1">
+                        <label class="text-xs text-gray-500">능력 <span id="valAbility">5</span></label>
+                        <input type="range" id="rangeAbility" min="1" max="10" value="5" class="w-full accent-blue-500 h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer">
+                    </div>
+                    <div class="space-y-1">
+                        <label class="text-xs text-gray-500">도덕 <span id="valMorality">5</span></label>
+                        <input type="range" id="rangeMorality" min="1" max="10" value="5" class="w-full accent-green-500 h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer">
+                    </div>
+                </div>
+
+                <div class="flex gap-2">
+                    <button id="btnSubmitChar" onclick="handleCharSubmit()" class="flex-1 bg-primary hover:bg-pink-600 text-white py-3 rounded-xl font-bold shadow-md transition transform active:scale-95">등록하기</button>
+                    <button id="btnCancelEdit" onclick="cancelEdit()" class="hidden px-4 py-3 bg-gray-400 text-white rounded-xl hover:bg-gray-500 transition font-medium text-sm">취소</button>
+                    <button onclick="generateRandomRoster()" class="px-4 py-3 bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 rounded-xl hover:bg-gray-200 transition font-medium text-sm">랜덤 채우기</button>
+                </div>
+            </div>
+
+            <!-- Data Management -->
+            <div id="dataControls" class="flex gap-2 justify-end max-w-4xl mx-auto">
+                <button onclick="downloadData('roster')" class="text-xs flex items-center gap-1 text-gray-500 hover:text-gray-800 dark:hover:text-white px-3 py-2 bg-white dark:bg-darkcard rounded-lg border dark:border-gray-700">
+                    <span class="material-icons-round text-sm">badge</span> 명단만 저장
+                </button>
+                <button onclick="downloadData('full')" class="text-xs flex items-center gap-1 text-gray-500 hover:text-gray-800 dark:hover:text-white px-3 py-2 bg-white dark:bg-darkcard rounded-lg border dark:border-gray-700">
+                    <span class="material-icons-round text-sm">save</span> 전체 저장
+                </button>
+                <label class="text-xs flex items-center gap-1 text-gray-500 hover:text-gray-800 dark:hover:text-white px-3 py-2 bg-white dark:bg-darkcard rounded-lg border dark:border-gray-700 cursor-pointer">
+                    <span class="material-icons-round text-sm">upload</span> 불러오기
+                    <input type="file" id="fileInput" class="hidden" onchange="uploadData(this)">
+                </label>
+            </div>
+
+            <!-- Roster List -->
+            <div id="rosterContentArea" class="space-y-4 max-w-4xl mx-auto">
+                <h3 id="rosterTitle" class="text-lg font-bold px-1">참가자 명단</h3>
+                <div id="rosterList" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                    <!-- 캐릭터 카드 -->
+                </div>
+                
+                <!-- Graduated Couples List -->
+                <div id="graduatedListArea" class="hidden mt-8">
+                    <h3 class="text-lg font-bold px-1 mb-2 text-primary">💖 졸업한 커플</h3>
+                    <div id="graduatedList" class="grid grid-cols-1 sm:grid-cols-2 gap-3"></div>
+                </div>
+            </div>
+        </section>
+        <!-- Tab 2: 관계도 (Status) -->
+        <!-- 높이 고정을 위해 h-[calc(100vh-200px)] 등의 값 사용 가능, 여기선 flex-row로 레이아웃 잡음 -->
+        <section id="tab-status" class="tab-content h-[calc(100vh-180px)] min-h-[500px]">
+            <div class="flex flex-col lg:flex-row gap-6 h-full">
+                
+                <!-- Canvas Container (Left) - Expanded to 3/4 -->
+                <div class="lg:w-3/4 shrink-0 h-full flex flex-col">
+                    <div class="bg-white dark:bg-darkcard rounded-2xl shadow-lg border border-gray-100 dark:border-gray-700 overflow-hidden relative flex-1 flex flex-col">
+                        <div class="absolute top-4 left-4 z-10 flex gap-2">
+                            <div class="bg-white/90 dark:bg-gray-800/90 backdrop-blur px-3 py-1 rounded-full text-xs font-bold shadow-sm pointer-events-none">
+                                관계도 (Mouse Over)
+                            </div>
+                            <button onclick="saveStatusImage()" class="bg-primary/90 hover:bg-primary text-white backdrop-blur px-3 py-1 rounded-full text-xs font-bold shadow-sm transition flex items-center gap-1">
+                                <span class="material-icons-round text-xs">download</span> 이미지 저장
+                            </button>
+                        </div>
+                        <!-- Canvas Wrapper: Centers canvas and constrains size -->
+                        <div class="p-4 flex-1 flex justify-center items-center bg-gray-50 dark:bg-[#1f2233] overflow-hidden">
+                            <!-- max-w-full max-h-full + aspect-square: Maintains square aspect ratio without overflowing container -->
+                            <canvas id="relationCanvas" width="800" height="800" class="max-w-full max-h-full aspect-square object-contain"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Detailed Relationship List (Right) - Reduced to 1/4 -->
+                <div class="lg:w-1/4 h-full flex flex-col min-h-0">
+                    <div class="bg-white dark:bg-darkcard rounded-2xl p-6 shadow-lg border border-gray-100 dark:border-gray-700 h-full overflow-y-auto">
+                        <div class="flex justify-between items-center mb-4 sticky top-0 bg-white dark:bg-darkcard z-10 pb-2 border-b dark:border-gray-700">
+                            <h2 class="text-lg font-bold">상세 관계</h2>
+                            <button onclick="toggleAllDetails()" class="text-xs text-primary hover:text-pink-600 font-bold transition">
+                                전체 펼치기/접기
+                            </button>
+                        </div>
+                        <div id="relationshipDetails" class="space-y-4 divide-y divide-gray-100 dark:divide-gray-700 text-sm">
+                            <div class="text-center text-gray-400 py-4">아직 관계 데이터가 충분하지 않습니다.</div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+
+        <!-- Tab 3: 진행 및 로그 (Logs) -->
+        <section id="tab-logs" class="tab-content h-full flex flex-col gap-4">
+            
+            <!-- Location Dashboard -->
+            <div class="bg-white dark:bg-darkcard rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-gray-700 shrink-0 max-w-4xl mx-auto w-full">
+                <h3 class="font-bold mb-2 flex items-center gap-2 text-sm text-gray-500 uppercase tracking-wider">
+                    <span class="material-icons-round text-base">place</span> 실시간 장소 현황
+                </h3>
+                <div id="locationGrid" class="flex flex-wrap gap-2 text-sm max-h-[200px] overflow-y-auto">
+                    <!-- JS로 채워짐 -->
+                </div>
+            </div>
+
+            <!-- Logs -->
+            <div id="logContainer" class="flex-1 bg-white dark:bg-darkcard rounded-2xl p-5 shadow-inner overflow-y-auto space-y-3 border border-gray-100 dark:border-gray-700 min-h-[300px] max-w-4xl mx-auto w-full">
+                <div class="text-center text-gray-400 mt-10">
+                    <span class="material-icons-round text-4xl mb-2">history_edu</span>
+                    <p>시뮬레이션을 시작하려면 '다음 날 진행'을 누르세요.</p>
+                </div>
+            </div>
+
+        </section>
+
+    </main>
+
+    <!-- Bottom Navigation -->
+    <nav class="bg-white dark:bg-darkcard border-t dark:border-gray-800 pb-safe z-20 shrink-0">
+        <div class="flex justify-around items-center h-16 max-w-6xl mx-auto">
+            <button onclick="switchTab('roster')" class="nav-btn active flex flex-col items-center gap-1 w-full h-full justify-center text-gray-400 hover:text-primary transition group" data-target="roster">
+                <span class="material-icons-round group-[.active]:text-primary text-2xl transition-colors">groups</span>
+                <span class="text-[10px] font-medium group-[.active]:text-gray-800 dark:group-[.active]:text-white">참가자</span>
+            </button>
+            <button onclick="switchTab('status')" class="nav-btn flex flex-col items-center gap-1 w-full h-full justify-center text-gray-400 hover:text-primary transition group" data-target="status">
+                <span class="material-icons-round group-[.active]:text-primary text-2xl transition-colors">hub</span>
+                <span class="text-[10px] font-medium group-[.active]:text-gray-800 dark:group-[.active]:text-white">관계도</span>
+            </button>
+            <button onclick="switchTab('logs')" class="nav-btn flex flex-col items-center gap-1 w-full h-full justify-center text-gray-400 hover:text-primary transition group" data-target="logs">
+                <span class="material-icons-round group-[.active]:text-primary text-2xl transition-colors">article</span>
+                <span class="text-[10px] font-medium group-[.active]:text-gray-800 dark:group-[.active]:text-white">진행/로그</span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Modal -->
+    <div id="modalOverlay" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white dark:bg-darkcard rounded-2xl shadow-2xl max-w-sm w-full p-6 transform transition-all scale-100">
+            <h3 id="modalTitle" class="text-xl font-bold mb-2 text-primary">이벤트 발생!</h3>
+            <p id="modalContent" class="text-gray-600 dark:text-gray-300 mb-6 leading-relaxed">내용</p>
+            <button onclick="closeModal()" class="w-full bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 py-3 rounded-xl font-bold transition">확인</button>
+        </div>
+    </div>
+
+    <!-- 플로팅 패널 제거됨 (HTML 구조 변경으로 인해 필요 없음, 2단 컬럼 구조 사용) -->
+
+    <script src="script.js"></script>
+</body>
+</html>
