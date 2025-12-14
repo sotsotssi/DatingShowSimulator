@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dating Show Simulator</title>
+    <title>연애 방송 시뮬레이터</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Tailwind Configuration for Custom Colors/Fonts -->
@@ -29,13 +29,11 @@
     <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.8/dist/web/static/pretendard.css" />
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
     <style>
-        /* 커스텀 스크롤바 */
         ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
         .dark ::-webkit-scrollbar-thumb { background: #475569; }
         
-        /* 탭 전환 애니메이션 */
         .tab-content {
             display: none;
             animation: fadeIn 0.3s ease-in-out;
@@ -48,7 +46,6 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* Details Summary 스타일 커스텀 */
         details > summary {
             list-style: none;
         }
@@ -63,7 +60,7 @@
     <header class="flex justify-between items-center px-6 py-4 bg-white/80 dark:bg-darkcard/80 backdrop-blur-md shadow-sm z-10 sticky top-0 shrink-0">
         <div class="flex items-center gap-2">
             <span class="material-icons-round text-primary text-3xl">favorite</span>
-            <h1 class="text-xl font-bold tracking-tight bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">Dating Show Simulator</h1>
+            <h1 class="text-xl font-bold tracking-tight bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">Dating Show Simulator <a href="https://x.com/bb_uu_t" target="_blank"><span class="text-xs font-normal text-slate-500 dark:text-slate-400 ml-1">@bb_uu_t</span></a></h1>
         </div>
         <div class="flex items-center gap-4">
             <div id="dayDisplay" class="px-3 py-1 bg-gray-100 dark:bg-gray-700 rounded-full text-sm font-semibold">
@@ -94,7 +91,6 @@
 
         <!-- Tab 1: 참가자 관리 (Roster) -->
         <section id="tab-roster" class="tab-content active space-y-6">
-            <!-- Setup & Add Character Card -->
             <div id="setupPanel" class="bg-white dark:bg-darkcard rounded-2xl p-6 shadow-lg border border-gray-100 dark:border-gray-700 max-w-4xl mx-auto">
                 <div class="flex justify-between items-center mb-6 border-b border-gray-100 dark:border-gray-700 pb-4">
                     <h2 class="text-lg font-bold flex items-center gap-2">
@@ -102,7 +98,6 @@
                     </h2>
                 </div>
 
-                <!-- Global Config Inputs -->
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
                     <div class="flex flex-col gap-1">
                         <label class="text-xs font-bold text-gray-500">최대 진행 일수</label>
@@ -130,7 +125,6 @@
                 <div class="grid grid-cols-2 gap-4 mb-4">
                     <input type="text" id="inputName" placeholder="이름" class="col-span-1 p-3 rounded-xl bg-gray-50 dark:bg-gray-800 border-none focus:ring-2 focus:ring-primary outline-none transition">
                     <select id="inputMbti" class="col-span-1 p-3 rounded-xl bg-gray-50 dark:bg-gray-800 border-none focus:ring-2 focus:ring-primary outline-none transition">
-                        <!-- JS로 옵션 채움 -->
                     </select>
                 </div>
                 
@@ -156,7 +150,6 @@
                 </div>
             </div>
 
-            <!-- Data Management -->
             <div id="dataControls" class="flex gap-2 justify-end max-w-4xl mx-auto">
                 <button onclick="downloadData('roster')" class="text-xs flex items-center gap-1 text-gray-500 hover:text-gray-800 dark:hover:text-white px-3 py-2 bg-white dark:bg-darkcard rounded-lg border dark:border-gray-700">
                     <span class="material-icons-round text-sm">badge</span> 명단만 저장
@@ -170,14 +163,11 @@
                 </label>
             </div>
 
-            <!-- Roster List -->
             <div id="rosterContentArea" class="space-y-4 max-w-4xl mx-auto">
                 <h3 id="rosterTitle" class="text-lg font-bold px-1">참가자 명단</h3>
                 <div id="rosterList" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-                    <!-- 캐릭터 카드 -->
                 </div>
                 
-                <!-- Graduated Couples List -->
                 <div id="graduatedListArea" class="hidden mt-8">
                     <h3 class="text-lg font-bold px-1 mb-2 text-primary">💖 졸업한 커플</h3>
                     <div id="graduatedList" class="grid grid-cols-1 sm:grid-cols-2 gap-3"></div>
@@ -185,11 +175,9 @@
             </div>
         </section>
         <!-- Tab 2: 관계도 (Status) -->
-        <!-- 높이 고정을 위해 h-[calc(100vh-200px)] 등의 값 사용 가능, 여기선 flex-row로 레이아웃 잡음 -->
         <section id="tab-status" class="tab-content h-[calc(100vh-180px)] min-h-[500px]">
             <div class="flex flex-col lg:flex-row gap-6 h-full">
                 
-                <!-- Canvas Container (Left) - Expanded to 3/4 -->
                 <div class="lg:w-3/4 shrink-0 h-full flex flex-col">
                     <div class="bg-white dark:bg-darkcard rounded-2xl shadow-lg border border-gray-100 dark:border-gray-700 overflow-hidden relative flex-1 flex flex-col">
                         <div class="absolute top-4 left-4 z-10 flex gap-2">
@@ -200,15 +188,12 @@
                                 <span class="material-icons-round text-xs">download</span> 이미지 저장
                             </button>
                         </div>
-                        <!-- Canvas Wrapper: Centers canvas and constrains size -->
                         <div class="p-4 flex-1 flex justify-center items-center bg-gray-50 dark:bg-[#1f2233] overflow-hidden">
-                            <!-- max-w-full max-h-full + aspect-square: Maintains square aspect ratio without overflowing container -->
                             <canvas id="relationCanvas" width="800" height="800" class="max-w-full max-h-full aspect-square object-contain"></canvas>
                         </div>
                     </div>
                 </div>
 
-                <!-- Detailed Relationship List (Right) - Reduced to 1/4 -->
                 <div class="lg:w-1/4 h-full flex flex-col min-h-0">
                     <div class="bg-white dark:bg-darkcard rounded-2xl p-6 shadow-lg border border-gray-100 dark:border-gray-700 h-full overflow-y-auto">
                         <div class="flex justify-between items-center mb-4 sticky top-0 bg-white dark:bg-darkcard z-10 pb-2 border-b dark:border-gray-700">
@@ -230,17 +215,14 @@
         <!-- Tab 3: 진행 및 로그 (Logs) -->
         <section id="tab-logs" class="tab-content h-full flex flex-col gap-4">
             
-            <!-- Location Dashboard -->
             <div class="bg-white dark:bg-darkcard rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-gray-700 shrink-0 max-w-4xl mx-auto w-full">
                 <h3 class="font-bold mb-2 flex items-center gap-2 text-sm text-gray-500 uppercase tracking-wider">
                     <span class="material-icons-round text-base">place</span> 실시간 장소 현황
                 </h3>
                 <div id="locationGrid" class="flex flex-wrap gap-2 text-sm max-h-[200px] overflow-y-auto">
-                    <!-- JS로 채워짐 -->
                 </div>
             </div>
 
-            <!-- Logs -->
             <div id="logContainer" class="flex-1 bg-white dark:bg-darkcard rounded-2xl p-5 shadow-inner overflow-y-auto space-y-3 border border-gray-100 dark:border-gray-700 min-h-[300px] max-w-4xl mx-auto w-full">
                 <div class="text-center text-gray-400 mt-10">
                     <span class="material-icons-round text-4xl mb-2">history_edu</span>
@@ -252,7 +234,6 @@
 
     </main>
 
-    <!-- Bottom Navigation -->
     <nav class="bg-white dark:bg-darkcard border-t dark:border-gray-800 pb-safe z-20 shrink-0">
         <div class="flex justify-around items-center h-16 max-w-6xl mx-auto">
             <button onclick="switchTab('roster')" class="nav-btn active flex flex-col items-center gap-1 w-full h-full justify-center text-gray-400 hover:text-primary transition group" data-target="roster">
@@ -270,7 +251,6 @@
         </div>
     </nav>
 
-    <!-- Modal -->
     <div id="modalOverlay" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
         <div class="bg-white dark:bg-darkcard rounded-2xl shadow-2xl max-w-sm w-full p-6 transform transition-all scale-100">
             <h3 id="modalTitle" class="text-xl font-bold mb-2 text-primary">이벤트 발생!</h3>
@@ -278,8 +258,6 @@
             <button onclick="closeModal()" class="w-full bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 py-3 rounded-xl font-bold transition">확인</button>
         </div>
     </div>
-
-    <!-- 플로팅 패널 제거됨 (HTML 구조 변경으로 인해 필요 없음, 2단 컬럼 구조 사용) -->
 
     <script src="script.js"></script>
 </body>
