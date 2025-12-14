@@ -27,15 +27,15 @@ const LOCATIONS = [
     "불꽃놀이 축제"
 ];
 
-const DEFAULT_NAMES = ["민준", "서연", "도윤", "지아", "예준", "하윤", "주원", "서현", "지호", "민서", "준우", "은지", "현우", "수아"];
+const DEFAULT_NAMES = ["미래", "정원", "성찬", "예찬", "시안", "시우", "하율", "유진", "준혁", "늘담", "서준", "노을", "세라", "정연"];
 const MBTI_TYPES = Object.keys(compatibilityData);
 
-const DISHES = ["알리오 올리오", "스테이크", "김치볶음밥", "된장찌개", "샌드위치", "라면", "카나페", "떡볶이"];
+const DISHES = ["알리오 올리오", "스테이크", "김치볶음밥", "된장찌개", "샌드위치", "라면", "카나페", "떡볶이", "파스타", "오므라이스", "돈가스", "제육덮밥"];
 const SPORTS = ["테니스", "배드민턴", "조깅", "수영", "요가", "클라이밍", "캐치볼", "스트레칭", "근력 운동"];
 const RESTAURANT_FOODS = ["코스 요리", "최고급 와인", "티본 스테이크", "랍스터", "파인다이닝", "화덕 피자", "오마카세"];
 const RIDES = ["롤러코스터", "회전목마", "바이킹", "관람차", "자이로드롭", "범퍼카", "유령의 집"];
 const MOVIES = ["로맨틱 코미디", "공포 영화", "액션 블록버스터", "독립 영화", "슬픈 멜로 영화"];
-const SONGS = ["신나는 댄스곡", "애절한 발라드", "힙합", "추억의 올드팝"];
+const SONGS = ["댄스곡", "발라드", "힙합", "올드팝", "최신 아이돌 노래", "뮤지컬 넘버", "트로트"];
 const ARTS = ["현대 미술", "조각상", "미디어 아트", "고전 명화"];
 
 let state = {
@@ -187,7 +187,7 @@ function generateActionScript(actionType, isSuccess, actor, target, loc) {
                 `${josa(actor.name, '은/는')} ${josa(target.name, '과/와')} 아름다운 풍경을 배경으로 사진을 찍으며 추억을 남겼습니다.`
             ],
             fail: [
-                `${josa(actor.name, '은/는')} 걷다가 돌뿌리에 걸려 넘어질 뻔했습니다. ${target.name} 앞에서 체면을 구겼습니다.`,
+                `${josa(actor.name, '은/는')} 걷다가 돌부리에 걸려 넘어질 뻔했습니다. ${target.name} 앞에서 체면을 구겼습니다.`,
                 `갑자기 비가 쏟아져 흠뻑 젖은 채로 걷다가 ${josa(actor.name, '과/와')} ${target.name} 사이의 분위기가 어색해졌습니다.`,
                 `${actor.name}의 걷는 속도가 너무 빨라 ${josa(target.name, '이/가')} 지루해하는 눈치입니다.`
             ]
@@ -211,7 +211,7 @@ function generateActionScript(actionType, isSuccess, actor, target, loc) {
                 `${actor.name}의 수준급 노래 실력에 ${target.name}는 넋을 잃고 바라보았습니다.`
             ],
             fail: [
-                `${josa(actor.name, '은/는')} 고음 불가임에도 ${josa(song, '을/를')} 선곡하여 삑사리를 냈습니다. 민망한 정적이 흘렀습니다.`,
+                `${josa(actor.name, '은/는')} ${josa(song, '을/를')} 무리해서 부르다가 삑사리를 냈습니다. 민망한 정적이 흘렀습니다.`,
                 `${josa(actor.name, '이/가')} 마이크를 독점하는 바람에 ${target.name}는 탬버린만 쳐야 했습니다.`,
                 `${josa(actor.name, '은/는')} 분위기에 맞지 않는 ${josa(song, '을/를')} 불러 ${target.name}를 지루하게 만들었습니다.`
             ]
@@ -266,7 +266,7 @@ function generateActionScript(actionType, isSuccess, actor, target, loc) {
         },
         movie: {
             success: [
-                `${josa(actor.name, '은/는')} ${josa(movie, '을/를')} 예매하여 ${target.name}의 취향을 완벽하게 저격했습니다.`,
+                `${josa(actor.name, '은/는')} ${josa(movie, '을/를')} 예매하여 ${target.name}의 취향을 꿰뚫었습니다.`,
                 `영화의 감동적인 장면에서 ${josa(actor.name, '은/는')} ${josa(target.name, '과/와')} 눈을 마주치며 교감했습니다.`,
                 `${josa(actor.name, '은/는')} 팝콘을 먹여주며 자연스러운 스킨십을 시도했고, ${josa(target.name, '이/가')} 미소로 화답했습니다.`
             ],
@@ -280,7 +280,7 @@ function generateActionScript(actionType, isSuccess, actor, target, loc) {
             success: [
                 `${josa(actor.name, '은/는')} ${josa(art, '을/를')} 감상하며 지적인 매력을 뽐내 ${josa(target.name, '을/를')} 감탄하게 했습니다.`,
                 `${josa(actor.name, '은/는')} ${josa(target.name, '과/와')} 작품에 대해 깊이 있는 대화를 나누며 서로의 가치관을 확인했습니다.`,
-                `조용한 미술관에서 ${josa(actor.name, '은/는')} ${target.name}에게만 들리는 목소리로 속삭이며 설레는 분위기를 만들었습니다.`
+                `조용한 미술관에서 ${josa(actor.name, '은/는')} ${target.name}에게만 들리는 목소리로 작게 속삭이며 감상을 나눴습니다.`
             ],
             fail: [
                 `${josa(actor.name, '은/는')} 작품 설명도 안 읽고 지나치기만 하여 ${josa(target.name, '을/를')} 실망시켰습니다.`,
@@ -302,7 +302,7 @@ function generateActionScript(actionType, isSuccess, actor, target, loc) {
         },
         talk: {
             success: [
-                `${josa(actor.name, '은/는')} ${target.name}의 관심사를 정확히 짚어내어 시간 가는 줄 모르고 대화했습니다.`,
+                `${josa(actor.name, '은/는')} ${target.name}의 관심사를 주제로 시간 가는 줄 모르고 대화했습니다.`,
                 `${josa(actor.name, '은/는')} 재치 있는 농담으로 ${josa(target.name, '을/를')} 웃게 만들었습니다.`,
                 `${josa(actor.name, '은/는')} 진지한 고민을 털어놓으며 ${josa(target.name, '과/와')} 서로의 깊은 내면을 확인했습니다.`
             ],
@@ -476,6 +476,37 @@ function generateRandomRoster() {
     renderRoster();
     addLog(`[시스템] ${addedCount}명의 참가자가 랜덤으로 합류했습니다.`);
 }
+
+function removeCharacter(id) {
+    if(confirm("정말 삭제하시겠습니까?")) {
+        const charToRemove = state.characters.find(c => c.id === id);
+        if (charToRemove && charToRemove.coupleId) {
+             const partner = state.characters.find(p => p.id === charToRemove.coupleId);
+             if (partner) {
+                 partner.coupleId = null;
+                 partner.couplingDay = null;
+             }
+        }
+        state.characters = state.characters.filter(c => c.id !== id);
+        
+        if (state.relationships[id]) {
+            delete state.relationships[id];
+        }
+        
+        Object.keys(state.relationships).forEach(key => {
+            if (state.relationships[key][id]) {
+                delete state.relationships[key][id];
+            }
+        });
+
+        renderRoster();
+        if (document.getElementById('tab-status').classList.contains('active')) {
+             renderHearts();
+             drawRelationshipMap();
+        }
+    }
+}
+
 
 function initRelationshipsFor(newChar) {
     if (!state.relationships[newChar.id]) state.relationships[newChar.id] = {};
@@ -964,7 +995,6 @@ function renderRoster() {
                     <span>도덕 ${char.morality}</span>
                 </div>
             </div>
-            ${state.day === 0 ? `
             <div class="flex gap-1">
                 <button onclick="startEditCharacter('${char.id}')" class="p-2 text-gray-400 hover:text-blue-500 transition rounded-full hover:bg-gray-100 dark:hover:bg-gray-700">
                     <span class="material-icons-round text-base">edit</span>
@@ -972,7 +1002,7 @@ function renderRoster() {
                 <button onclick="removeCharacter('${char.id}')" class="p-2 text-gray-400 hover:text-red-500 transition rounded-full hover:bg-gray-100 dark:hover:bg-gray-700">
                     <span class="material-icons-round text-base">remove_circle_outline</span>
                 </button>
-            </div>` : ''}
+            </div>
         `;
         container.appendChild(card);
     });
@@ -1050,8 +1080,32 @@ function renderLocationTable() {
 
 function removeCharacter(id) {
     if(confirm("정말 삭제하시겠습니까?")) {
+        const charToRemove = state.characters.find(c => c.id === id);
+        if (charToRemove && charToRemove.coupleId) {
+             const partner = state.characters.find(p => p.id === charToRemove.coupleId);
+             if (partner) {
+                 partner.coupleId = null;
+                 partner.couplingDay = null;
+             }
+        }
+
         state.characters = state.characters.filter(c => c.id !== id);
+        
+        if (state.relationships[id]) {
+            delete state.relationships[id];
+        }
+        
+        Object.keys(state.relationships).forEach(key => {
+            if (state.relationships[key][id]) {
+                delete state.relationships[key][id];
+            }
+        });
+
         renderRoster();
+        if (document.getElementById('tab-status').classList.contains('active')) {
+             renderHearts();
+             drawRelationshipMap();
+        }
     }
 }
 
