@@ -32,11 +32,12 @@ const MBTI_TYPES = Object.keys(compatibilityData);
 
 const DISHES = ["알리오 올리오", "스테이크", "김치볶음밥", "된장찌개", "샌드위치", "라면", "카나페", "떡볶이", "파스타", "오므라이스", "돈가스", "제육덮밥"];
 const SPORTS = ["테니스", "배드민턴", "조깅", "수영", "요가", "클라이밍", "캐치볼", "스트레칭", "근력 운동"];
-const RESTAURANT_FOODS = ["코스 요리", "최고급 와인", "티본 스테이크", "랍스터", "파인다이닝", "화덕 피자", "오마카세"];
+const RESTAURANT_FOODS = ["코스 요리", "고급 와인", "티본 스테이크", "랍스터", "파인다이닝", "화덕 피자", "오마카세"];
 const RIDES = ["롤러코스터", "회전목마", "바이킹", "관람차", "자이로드롭", "범퍼카", "유령 열차"];
-const MOVIES = ["로맨틱 코미디", "공포 영화", "액션 블록버스터", "독립 영화", "슬픈 멜로 영화"];
+const MOVIES = ["로맨틱 코미디", "공포 영화", "액션 블록버스터", "독립 영화", "슬픈 다큐멘터리","범죄 스릴러"];
 const SONGS = ["댄스곡", "발라드", "힙합", "올드팝", "최신 아이돌 노래", "뮤지컬 넘버", "트로트"];
 const ARTS = ["현대 미술", "조각상", "미디어 아트", "고전 명화"];
+const GIFTS = ["향수", "목도리", "시계", "책", "꽃다발", "초콜릿", "직접 짠 스웨터", "커플링", "장난감", "영양제", "손편지", "커플 티셔츠", "종이학", "머그컵", "캔들", "베개"];
 
 let state = {
     day: 0,
@@ -190,20 +191,20 @@ function generateActionScript(actionType, isSuccess, actor, target, loc) {
             success: [
                 `${josa(actor.name, '이/가')} ${josa(target.name, '과/와')} 함께 모닥불을 피우고 진솔한 이야기를 나눴습니다.`,
                 `${josa(actor.name, '은/는')} 능숙하게 텐트를 설치하고 ${target.name}에게 맛있는 캠핑 요리를 대접했습니다.`,
-                `${josa(actor.name, '와/과')} ${josa(target.name, '은/는')} 나란히 앉아 밤하늘의 쏟아지는 별을 보며 낭만적인 시간을 보냈습니다.`
+                `${josa(actor.name, '와/과')} ${josa(target.name, '은/는')} 나란히 앉아 밤하늘의 쏟아지는 별을 바라보았습니다.`
             ],
             fail: [
                 `${josa(actor.name, '이/가')} 텐트를 치다가 ${josa(target.name, '을/를')} 쳐 버렸습니다.`,
-                `${josa(actor.name, '은/는')} 벌레를 보고 기겁하며 소리를 질러 ${josa(target.name, '을/를')}를 더 놀라게 했습니다.`,
+                `${josa(actor.name, '이/가')} 벌레를 보고 ${target.name} 뒤에 숨었습니다.`,
                 `${josa(actor.name, '이/가')} 불을 피우려다 연기만 잔뜩 피워 ${josa(target.name, '이/가')} 연신 기침했습니다.`
             ]
         };
     } else if (loc === "바다") {
         specificActs = {
             success: [
-                `${josa(actor.name, '이/가')} ${josa(target.name, '과/와')} 함께 맨발로 해변을 달리며 '나 잡아봐라' 놀이를 했습니다.`,
+                `${josa(actor.name, '이/가')} ${josa(target.name, '과/와')} 함께 맨발로 해변을 달렸습니다.`,
                 `${josa(actor.name, '은/는')} 예쁜 조개껍데기를 주워 ${target.name}에게 선물했습니다.`,
-                `${josa(actor.name, '와/과')} ${josa(target.name, '은/는')} 시원한 파도 소리를 들으며 서로에게 기대어 앉았습니다.`
+                `${josa(actor.name, '와/과')} ${josa(target.name, '은/는')} 파도 소리를 들으며 서로에게 기대어 앉았습니다.`
             ],
             fail: [
                 `${josa(actor.name, '이/가')} ${target.name}에게 물을 너무 심하게 뿌려서 눈에 바닷물이 들어갔습니다.`,
@@ -215,13 +216,13 @@ function generateActionScript(actionType, isSuccess, actor, target, loc) {
          specificActs = {
             success: [
                 `${josa(actor.name, '이/가')} 힘들어하는 ${target.name}의 손을 잡아주며 정상까지 이끌어줬습니다.`,
-                `${josa(actor.name, '와/과')} ${josa(target.name, '은/는')} 정상에서 함께 상쾌한 기분을 만끽했습니다.`,
-                `${josa(actor.name, '은/는')} 준비해온 도시락을 ${josa(target.name, '과/와')} 나눠 먹으며 오붓한 시간을 가졌습니다.`
+                `${josa(actor.name, '와/과')} ${josa(target.name, '은/는')} 정상에서 함께 풍경을 바라보았습니다.`,
+                `${josa(actor.name, '은/는')} 준비해온 도시락을 ${josa(target.name, '과/와')} 나눠 먹었습니다.`
             ],
             fail: [
-                `${josa(actor.name, '이/가')} 약한 모습을 보이며 ${target.name}보다 먼저 지쳐버렸습니다.`,
+                `${josa(actor.name, '이/가')} ${target.name}보다 먼저 지쳐버렸습니다.`,
                 `${josa(actor.name, '은/는')} 길을 잘못 들어 ${josa(target.name, '과/와')} 한참을 헤매야 했습니다.`,
-                `${josa(actor.name, '이/가')} 벌레를 보고 비명을 지르며 ${target.name} 뒤로 숨었습니다.`
+                `${josa(actor.name, '이/가')} 벌레를 보고 ${target.name} 앞에서 넘어졌습니다.`
             ]
         };
     } else if (loc === "체육관") { 
@@ -229,11 +230,12 @@ function generateActionScript(actionType, isSuccess, actor, target, loc) {
             success: [
                 `${josa(actor.name, '과/와')} ${josa(target.name, '은/는')} 함께 ${josa(sport, '을/를')} 즐기며 건강한 시간을 보냈습니다.`,
                 `${josa(actor.name, '은/는')} ${josa(target.name, '과/와')} 함께 ${josa(sport, '으로/로')} 내기를 했습니다.`,
-                `${josa(actor.name, '은/는')} ${sport} 후 ${target.name}에게 시원한 이온 음료를 건넸습니다.`
+                `${josa(actor.name, '은/는')} ${sport} 후 ${target.name}에게 이온 음료를 건넸습니다.`
             ],
             fail: [
                 `${josa(actor.name, '이/가')} 승부에 지나치게 집착하여 ${target.name}에게 무안함을 안겼습니다.`,
                 `${josa(actor.name, '은/는')} ${sport} 도중 무리하다가 ${josa(target.name, '을/를')} 조금 다치게 만들었습니다.`,
+                `${josa(actor.name, '이/가')} ${sport} 실력이 부족해 ${josa(target.name, '이/가')} 답답해했습니다.`
             ]
         };
     } else if (loc === "도서관") {
@@ -244,22 +246,22 @@ function generateActionScript(actionType, isSuccess, actor, target, loc) {
                 `${josa(actor.name, '와/과')} ${josa(target.name, '은/는')} 이어폰을 나눠 끼고 조용히 음악과 책을 감상했습니다.`
             ],
             fail: [
-                `${josa(actor.name, '이/가')} 책을 읽다 코를 골며 조는 바람에 ${josa(target.name, '이/가')} 황급히 깨워야 했습니다.`,
-                `${actor.name}의 배에서 꼬르륵 소리가 크게 나서 ${josa(target.name, '이/가')} 웃음을 참았습니다.`,
-                `${josa(actor.name, '이/가')} 실수로 책더미를 무너뜨려 ${target.name}의 얼굴을 화끈거르게 했습니다.`
+                `${josa(actor.name, '이/가')} 책을 읽다 조는 모습을 ${target.name}에게 들켰습니다.`,
+                `${josa(actor.name, '이/가')} 책 내용에 대해 이야기하다가 ${josa(target.name, '과/와')} 언쟁하였습니다.`,
+                `${josa(actor.name, '이/가')} 실수로 책더미를 무너뜨려 ${josa(target.name, '이/가')} 함께 정리해야 했습니다.`
             ]
         };
     } else if (loc === "루프탑 바") {
         specificActs = {
             success: [
-                `${josa(actor.name, '은/는')} 야경이 내려다보이는 자리에서 ${target.name}에게 칵테일을 사주며 분위기를 잡았습니다.`,
-                `${josa(actor.name, '와/과')} ${josa(target.name, '은/는')} 아름다운 밤하늘을 배경으로 사진을 남겼습니다.`,
+                `${josa(actor.name, '은/는')} 야경이 내려다보이는 자리에서 ${josa(target.name, '과/와')} 함께 칵테일을 마셨습니다.`,
+                `${josa(actor.name, '와/과')} ${josa(target.name, '은/는')} 야경을 배경으로 사진을 남겼습니다.`,
                 `${josa(actor.name, '은/는')} 쌀쌀한 날씨에 ${target.name}에게 겉옷을 벗어주었습니다.`
             ],
             fail: [
-                `${josa(actor.name, '은/는')} 분위기에 맞지 않게 큰 소리로 떠들어 ${josa(target.name, '을/를')} 부끄럽게 했습니다.`,
+                `${josa(actor.name, '은/는')} 술에 취해 ${josa(target.name, '을/를')} 두고 먼저 잠들었습니다.`,
                 `${josa(actor.name, '이/가')} 실수로 칵테일을 쏟아 ${target.name}의 옷을 적시고 말았습니다.`,
-                `${josa(actor.name, '은/는')} 루프탑의 추위에 덜덜 떠느라 ${josa(target.name, '과/와')}의 대화에 집중하지 못했습니다.`
+                `${josa(actor.name, '은/는')} 루프탑의 추위에 떠느라 ${josa(target.name, '과/와')}의 대화에 집중하지 못했습니다.`
             ]
         };
     }
@@ -271,121 +273,119 @@ function generateActionScript(actionType, isSuccess, actor, target, loc) {
         const acts = {
             walk: {
                 success: [
-                    `${josa(actor.name, '은/는')} 상쾌한 공기를 마시며 ${josa(target.name, '과/와')} 발걸음을 맞췄습니다. 대화가 끊이지 않습니다.`,
-                    `함께 걷는 동안 ${josa(actor.name, '과/와')} ${target.name}의 손끝이 살짝 스쳤습니다. 설레는 분위기가 감돕니다.`,
-                    `${josa(actor.name, '은/는')} ${josa(target.name, '과/와')} 아름다운 풍경을 배경으로 사진을 찍으며 추억을 남겼습니다.`
+                    `${josa(actor.name, '은/는')} 상쾌한 공기를 마시며 ${josa(target.name, '과/와')} 발걸음을 맞췄습니다.`,
+                    `함께 걷는 동안 ${josa(actor.name, '과/와')} ${target.name}의 손끝이 스쳤습니다.`,
+                    `${josa(actor.name, '은/는')} ${josa(target.name, '과/와')} 아름다운 풍경을 배경으로 사진을 찍었습니다.`
                 ],
                 fail: [
-                    `${josa(actor.name, '은/는')} 걷다가 돌부리에 걸려 넘어질 뻔했습니다. ${target.name} 앞에서 체면을 구겼습니다.`,
+                    `${josa(actor.name, '은/는')} 걷다가 ${target.name} 앞에서 돌부리에 걸려 넘어질 뻔했습니다.`,
                     `갑자기 비가 쏟아져 흠뻑 젖은 채로 걷다가 ${josa(actor.name, '과/와')} ${target.name} 사이의 분위기가 어색해졌습니다.`,
-                    `${actor.name}의 걷는 속도가 너무 빨라 ${josa(target.name, '이/가')} 지루해하는 눈치입니다.`
+                    `${actor.name}의 걷는 속도가 너무 빨라 ${josa(target.name, '이/가')} 힘겹게 따라갔습니다.`
                 ]
             },
             leisure: {
                 success: [
-                    `${loc}에서 ${josa(actor.name, '은/는')} 숨겨둔 개인기를 보여주며 ${target.name}의 감탄을 자아냈습니다.`,
-                    `${josa(actor.name, '은/는')} ${josa(target.name, '과/와')} 함께 게임을 하며 하이파이브를 할 정도로 즐거운 시간을 보냈습니다.`,
-                    `${josa(actor.name, '은/는')} 재치 있는 장난으로 ${josa(target.name, '을/를')} 활짝 웃게 만들었습니다.`
+                    `${loc}에서 ${josa(actor.name, '은/는')} ${target.name}에게 숨겨둔 특기를 보여주었습니다.`,
+                    `${josa(actor.name, '은/는')} ${josa(target.name, '과/와')} 함께 게임을 즐기며 재밌는 시간을 보냈습니다.`,
+                    `${josa(actor.name, '은/는')} 재치 있는 말로 ${josa(target.name, '을/를')} 웃게 만들었습니다.`
                 ],
                 fail: [
-                    `${loc}에서 ${josa(actor.name, '은/는')} 실수를 연발하여 ${josa(target.name, '이/가')} 애써 웃음을 참는 게 보입니다.`,
+                    `${loc}에서 ${josa(actor.name, '이/가')} 실수를 연발하여 ${josa(target.name, '이/가')} 당황했습니다.`,
                     `${josa(actor.name, '은/는')} 너무 승부욕만 앞세우다 ${target.name}의 기분을 상하게 했습니다.`,
-                    `${josa(actor.name, '은/는')} ${loc} 이용 수칙을 몰라 허둥지둥했습니다. 멋없는 순간이었습니다.`
+                    `${josa(actor.name, '은/는')} ${target.name} 앞에서 ${loc} 이용 수칙을 몰라 허둥지둥했습니다.`
                 ]
             },
             singing: {
                 success: [
-                    `${josa(actor.name, '은/는')} ${josa(song, '을/를')} 감미롭게 불러 ${target.name}의 심금을 울렸습니다.`,
-                    `${josa(actor.name, '은/는')} ${josa(target.name, '과/와')} 듀엣곡을 부르며 환상의 호흡을 자랑했습니다.`,
-                    `${actor.name}의 수준급 노래 실력에 ${josa(target.name, '이/가')} 감탄하는 눈으로 바라보았습니다.`
+                    `${josa(actor.name, '은/는')} ${target.name} 앞에서 ${josa(song, '을/를')} 감미롭게 불렀습니다.`,
+                    `${josa(actor.name, '은/는')} ${josa(target.name, '과/와')} 듀엣곡을 불렀습니다.`,
+                    `${actor.name}의 노래 실력에 ${josa(target.name, '이/가')} 감탄하는 눈으로 바라보았습니다.`
                 ],
                 fail: [
-                    `${josa(actor.name, '은/는')} ${josa(song, '을/를')} 무리해서 부르다가 삑사리를 냈습니다. 민망한 정적이 흘렀습니다.`,
+                    `${josa(actor.name, '은/는')} ${josa(song, '을/를')} 무리해서 부르다가 삑사리를 냈습니다.`,
                     `${josa(actor.name, '이/가')} 마이크를 독점하는 바람에 ${josa(target.name, '은/는')} 탬버린만 쳐야 했습니다.`,
-                    `${josa(actor.name, '은/는')} 분위기에 맞지 않는 ${josa(song, '을/를')} 불러 ${target.name}를 지루하게 만들었습니다.`
+                    `${josa(actor.name, '이/가')} 분위기에 맞지 않는 ${josa(song, '을/를')} 불러 ${josa(target.name, '은/는')} 미묘한 표정을 지었습니다.`
                 ]
             },
             exercise: {
                 success: [
-                    `${loc}에서 ${josa(actor.name, '은/는')} ${josa(target.name, '과/와')} 함께 땀 흘리며 건강한 데이트를 즐겼습니다.`,
-                    `${loc}에서 ${josa(actor.name, '은/는')} ${target.name}에게 운동 방법을 친절하게 가르쳐주었습니다.`,
+                    `${josa(actor.name, '은/는')} ${loc}에서 ${josa(target.name, '과/와')} 함께 땀을 흘렸습니다.`,
+                    `${loc}에서 ${josa(actor.name, '은/는')} ${target.name}에게 운동 방법을 가르쳐주었습니다.`,
                     `${loc}에서 ${josa(actor.name, '은/는')} 지치지 않는 체력으로 ${target.name}에게 든든한 모습을 보여주었습니다.`
                 ],
                 fail: [
                     `${josa(actor.name, '은/는')} 무리하게 운동하다 쥐가 나 ${target.name}의 부축을 받아야 했습니다.`,
                     `${josa(actor.name, '은/는')} 체력이 먼저 바닥나 ${target.name} 앞에서 뻗어 버렸습니다.`,
-                    `${josa(actor.name, '이/가')} 너무 가까이 붙는 것이 부담스러웠는지 ${josa(target.name, '이/가')} 살짝 거리를 두었습니다.`
+                    `${josa(actor.name, '과/와')}의 가까운 거리가 부담스러웠는지 ${josa(target.name, '이/가')} 살짝 멀어졌습니다.`
                 ]
             },
             cooking: {
                 success: [
                     `${josa(actor.name, '은/는')} 능숙한 솜씨로 ${target.name}에게 완벽한 ${josa(dish, '을/를')} 대접했습니다.`,
-                    `${josa(actor.name, '이/가')} 냉장고 재료만으로 훌륭한 ${josa(dish, '을/를')} 만들어내자 ${josa(target.name, '이/가')} 눈을 반짝입니다.`,
-                    `${josa(actor.name, '은/는')} ${josa(target.name, '과/와')} 함께 ${josa(dish, '을/를')} 만들며 좋은 분위기를 연출했습니다.`
+                    `${josa(actor.name, '이/가')} ${josa(target.name, '과/와')} 냉장고 재료만으로 훌륭한 ${josa(dish, '을/를')} 만들었습니다.`,
+                    `${josa(actor.name, '은/는')} ${josa(target.name, '과/와')} 함께 ${josa(dish, '을/를')} 만들며 이야기를 나누었습니다.`
                 ],
                 fail: [
-                    `${josa(actor.name, '은/는')} 자신만만하게 ${dish} 요리를 시작했으나 소금을 쏟아버려 음식을 망쳤습니다.`,
-                    `요리 도중 손을 베일 뻔하여 ${josa(target.name, '이/가')} 놀라서 ${josa(actor.name, '을/를')} 걱정했습니다. 분위기가 가라앉았습니다.`,
+                    `${josa(actor.name, '은/는')} ${dish} 요리를 시작했으나 소금을 쏟아버려 음식을 망쳤습니다.`,
+                    `${josa(actor.name, '이/가')} 요리 도중 손을 베일 뻔하여 ${josa(target.name, '이/가')} 당황합니다.`,
                     `${actor.name}의 의욕은 앞섰지만 완성된 ${josa(dish, '은/는')} 정체불명의 맛이 났습니다. ${josa(target.name, '은/는')} 물만 마십니다.`
                 ]
             },
             date: {
                 success: [
-                    `${josa(actor.name, '은/는')} ${loc}에서 ${josa(food, '을/를')} 함께하며 로맨틱한 분위기를 이끌었습니다.`,
-                    `${josa(actor.name, '이/가')} ${josa(food, '과/와')} 어울리는 대화 주제를 꺼내자 ${josa(target.name, '이/가')} 즐거워합니다.`,
-                    `${josa(actor.name, '은/는')} 센스 있는 결제로 ${target.name}에게 어른스러운 매력을 어필했습니다.`
+                    `${josa(actor.name, '은/는')} ${loc}에서 ${josa(food, '을/를')} 함께하며 진지한 대화를 나눴습니다.`,
+                    `${josa(actor.name, '이/가')} ${josa(food, '과/와')} 어울리는 대화 주제를 꺼내자 ${josa(target.name, '이/가')} 호응합니다.`,
+                    `${josa(actor.name, '이/가')} 결제하자 ${josa(target.name, '이/가')} 카페에서는 자신이 내겠다고 말합니다.`
                 ],
                 fail: [
                     `${josa(actor.name, '은/는')} 카드가 결제되지 않아 계산대에서 진땀을 뺐습니다. ${josa(target.name, '이/가')} 민망해합니다.`,
-                    `${josa(actor.name, '이/가')} 주문한 ${josa(food, '이/가')} 품절되어 허둥지둥 다른 메뉴를 골랐습니다. 센스가 부족했습니다.`,
-                    `${josa(actor.name, '은/는')} 식사 예절을 실수하여 옷에 소스를 흘렸습니다. ${josa(target.name, '이/가')} 냅킨을 건네줍니다.`
+                    `${josa(actor.name, '이/가')} 주문한 ${josa(food, '이/가')} 품절되어 당황하는 모습을 보였습니다.`,
+                    `${josa(actor.name, '은/는')} 실수로 옷에 소스를 흘렸습니다. ${josa(target.name, '이/가')} 냅킨을 건네줍니다.`
                 ]
             },
             ride: { 
                 success: [
-                    `${josa(actor.name, '은/는')} ${josa(ride, '을/를')} 타며 ${target.name}의 손을 꼭 잡아주었습니다. 두근거림이 전해집니다.`,
-                    `${josa(actor.name, '은/는')} ${josa(target.name, '이/가')} 무서워하지 않도록 ${ride} 옆자리에서 든든하게 지켜주었습니다.`,
-                    `${ride} 위에서 ${josa(actor.name, '은/는')} ${josa(target.name, '과/와')} 함께 환호성을 지르며 스트레스를 날려버렸습니다.`
+                    `${josa(actor.name, '은/는')} ${josa(ride, '을/를')} 타며 ${target.name}의 손을 꼭 잡아주었습니다.`,
+                    `${josa(actor.name, '은/는')} ${josa(target.name, '이/가')} 무서워하지 않도록 ${ride} 옆자리에서 지켜주었습니다.`,
+                    `${ride} 위에서 ${josa(actor.name, '은/는')} ${josa(target.name, '과/와')} 함께 스릴을 즐겼습니다.`
                 ],
                 fail: [
                     `${josa(actor.name, '은/는')} ${josa(ride, '을/를')} 타고 내려와 멀미를 하는 바람에 ${josa(target.name, '이/가')} 등을 두드려주었습니다.`,
-                    `${josa(actor.name, '은/는')} 너무 무서운 나머지 ${ride} 위에서 비명을 질러 ${josa(target.name, '을/를')} 당황하게 했습니다.`,
-                    `${actor.name}의 ${ride} 안전 장치 문제로 잠시 소동을 피웠습니다.`
+                    `${josa(actor.name, '이/가')} ${ride} 위에서 얼어붙어 ${josa(target.name, '을/를')} 걱정하게 만들었습니다.`,
+                    `${actor.name}의 ${ride} 안전 장치 문제로 잠시 소동이 일어났습니다.`
                 ]
             },
             movie: {
                 success: [
-                    `${josa(actor.name, '은/는')} ${josa(movie, '을/를')} 예매하여 ${target.name}의 취향을 꿰뚫었습니다.`,
+                    `${josa(actor.name, '은/는')} ${josa(movie, '을/를')} 예매하여 ${josa(target.name, '과/와')} 즐거운 시간을 보냈습니다.`,
                     `영화의 감동적인 장면에서 ${josa(actor.name, '은/는')} ${josa(target.name, '과/와')} 눈을 마주치며 교감했습니다.`,
-                    `${josa(actor.name, '은/는')} 팝콘을 먹여주자 ${josa(target.name, '이/가')} 미소로 화답했습니다.`
+                    `${josa(actor.name, '은/는')} 팝콘을 먹여주자 ${josa(target.name, '이/가')} 자연스레 받아먹었습니다.`
                 ],
                 fail: [
                     `${josa(actor.name, '이/가')} 고른 ${josa(movie, '은/는')} 너무 지루해서 ${josa(target.name, '이/가')} 졸기 시작했습니다.`,
-                    `${josa(actor.name, '은/는')} 영화 보는 내내 큰 소리로 팝콘을 먹어 ${target.name}의 눈살을 찌푸리게 했습니다.`,
-                    `${josa(actor.name, '은/는')} 슬픈 장면에서 혼자 오열하여 ${josa(target.name, '을/를')} 당황하게 만들었습니다.`
+                    `${josa(actor.name, '과/와')} ${josa(target.name, '이/가')} 영화를 보는 내내 옆 커플이 이야기를 해서 집중할 수가 없었습니다.`,
+                    `${josa(actor.name, '은/는')} 슬픈 장면에서 눈물을 뚝뚝 흘려 ${josa(target.name, '을/를')} 당황하게 만들었습니다.`
                 ]
             },
             art: {
                 success: [
-                    `${josa(actor.name, '은/는')} ${josa(art, '을/를')} 감상하며 깔끔한 작품 설명으로 ${josa(target.name, '을/를')} 감탄하게 했습니다.`,
+                    `${josa(actor.name, '은/는')} ${josa(art, '을/를')} 감상하며 ${josa(target.name, '과/와')} 통하는 취향을 확인했습니다.`,
                     `${josa(actor.name, '은/는')} ${josa(target.name, '과/와')} 작품에 대해 깊이 있는 대화를 나누며 서로의 가치관을 확인했습니다.`,
                     `조용한 미술관에서 ${josa(actor.name, '은/는')} ${target.name}에게만 들리는 목소리로 작게 속삭이며 감상을 나눴습니다.`
                 ],
                 fail: [
-                    `${josa(actor.name, '은/는')} 작품 설명도 안 읽고 지나치기만 하여 ${josa(target.name, '을/를')} 실망시켰습니다.`,
-                    `${josa(actor.name, '은/는')} 조용한 관람 에티켓을 지키지 않아 ${josa(target.name, '이/가')} 부끄러워했습니다.`,
+                    `${actor.name}의 장황한 작품 설명에 ${josa(target.name, '이/가')} 곤란한 기색을 내비칩니다.`,
                     `${josa(actor.name, '은/는')} 예술에 대해 아는 척하다가 ${target.name}에게 틀린 정보를 들키고 말았습니다.`
                 ]
             },
             shopping: {
                 success: [
-                    `${josa(actor.name, '은/는')} ${target.name}에게 딱 어울리는 옷을 골라주며 패션 센스를 보여주었습니다.`,
-                    `${josa(actor.name, '은/는')} ${josa(target.name, '과/와')} 서로의 물건을 골라주며 커플 아이템을 맞추는 재미를 느꼈습니다.`,
-                    `${josa(actor.name, '은/는')} 짐을 들어주며 ${josa(target.name, '을/를')} 배려하는 모습을 보여주었습니다.`
+                    `${josa(actor.name, '은/는')} ${target.name}에게 어울리는 옷을 골라주었습니다.`,
+                    `${josa(actor.name, '은/는')} ${josa(target.name, '과/와')} 서로 물건을 골라주며 커플 아이템을 맞췄습니다.`,
+                    `${josa(actor.name, '은/는')} ${target.name}의 짐을 들어주었습니다.`
                 ],
                 fail: [
                     `${josa(actor.name, '은/는')} ${target.name}의 쇼핑을 기다리다 지쳐서 벤치에 널브러졌습니다.`,
-                    `${josa(actor.name, '은/는')} 가격표만 보고 불평을 늘어놓아 ${target.name}의 기분을 상하게 했습니다.`,
                     `${josa(actor.name, '은/는')} ${target.name}에게 전혀 어울리지 않는 옷을 추천하여 안목을 의심받았습니다.`
                 ]
             },
@@ -398,7 +398,7 @@ function generateActionScript(actionType, isSuccess, actor, target, loc) {
                 fail: [
                     `${josa(actor.name, '이/가')} 썰렁한 농담을 던져 분위기가 순식간에 얼어붙었습니다.`,
                     `${josa(actor.name, '이/가')} 대화 도중 말실수를 하여 ${target.name}의 표정이 굳어졌습니다.`,
-                    `${josa(actor.name, '이/가')} 자기 자랑만 늘어놓다가 ${josa(target.name, '이/가')} 하품하는 것을 목격했습니다.`
+                    `${josa(actor.name, '이/가')} 자신의 얘기만 늘어놓다가 ${josa(target.name, '이/가')} 하품하는 것을 목격했습니다.`
                 ]
             }
         };
@@ -748,6 +748,15 @@ function triggerEvent(actor, target) {
             isFireworks = true;
         }
     }
+    let isGift = false;
+    let giftResult = 0; 
+    
+    if (!isFireworks && state.day > 0 && state.day % 7 === 0) {
+        if (Math.random() < 0.7) {
+            loc = "선물 교환식";
+            isGift = true;
+        }
+    }
 
     actor.currentLocation = loc;
     target.currentLocation = loc;
@@ -774,6 +783,8 @@ function triggerEvent(actor, target) {
 
     let actionType = getActionType(loc);
     if (isFireworks) actionType = 'date'; 
+    if (isGift) actionType = 'gift'; // Placeholder type
+
 
     let statValue = 0;
     switch (actionType) {
@@ -785,9 +796,20 @@ function triggerEvent(actor, target) {
             break;
         case 'cooking': statValue = actor.charm; break;
         case 'date': case 'movie': case 'art': case 'shopping': statValue = actor.ability; break;
+        case 'gift': statValue = (actor.ability + actor.charm) / 2; break;
+
     }
 
-    const isSuccess = checkSuccess(statValue);
+    let isSuccess = checkSuccess(statValue);
+    if (isGift) {
+        const roll = Math.random() * 100;
+        if (roll < 20) { giftResult = 0; isSuccess = false; }
+        else if (roll < 40) { giftResult = 1; isSuccess = false; }
+        else if (roll < 60) { giftResult = 2; isSuccess = true; }
+        else if (roll < 80) { giftResult = 3; isSuccess = true; }
+        else { giftResult = 4; isSuccess = true; }
+    }
+
     
     const relAToB = state.relationships[actor.id][target.id];
     const relBToA = state.relationships[target.id][actor.id];
@@ -801,7 +823,12 @@ function triggerEvent(actor, target) {
         changeValTarget += 15;
     }
     
-    if (isSuccess) {
+    if (isGift) {
+        // -15, -5, +10, +15, +20
+        const giftVals = [-15, -5, 10, 15, 20];
+        changeValActor = giftVals[giftResult];
+        changeValTarget = giftVals[giftResult];
+    } else if (isSuccess) {
         changeValActor += 5 + Math.random() * 5; 
         changeValTarget += 5 + Math.random() * 5;
     } else {
@@ -837,7 +864,19 @@ function triggerEvent(actor, target) {
     changeAffection(target.id, actor.id, Math.floor(changeValTarget));
 
     if (isFireworks) {
-        return `🎆 ${josa(actor.name, '과/와')} ${josa(target.name, '은/는')} 불꽃놀이를 보며 로맨틱한 분위기에 취했습니다.`;
+        return `🎆 ${josa(actor.name, '과/와')} ${josa(target.name, '은/는')} 함께 불꽃놀이를 즐겼습니다.`;
+    }
+    if (isGift) {
+        const gift = getRandomItem(GIFTS);
+        let reaction = "";
+        switch(giftResult) {
+            case 0: reaction = "표정을 굳혔습니다."; break;
+            case 1: reaction = "애매한 미소를 지으며 고맙다고 말했습니다."; break;
+            case 2: reaction = "가볍게 고마움을 표시했습니다."; break;
+            case 3: reaction = "마음에 든다며 좋아했습니다."; break;
+            case 4: reaction = "놀란 기색으로 갖고 싶었던 것이라고 말했습니다."; break;
+        }
+        return `🎁 ${josa(actor.name, '은/는')} ${target.name}에게 ${josa(gift, '을/를')} 선물했습니다. ${josa(target.name, '은/는')} ${reaction}`;
     }
 
     return generateActionScript(actionType, isSuccess, actor, target, loc);
@@ -1142,44 +1181,12 @@ function renderLocationTable() {
                 span.innerText = p.name;
                 peopleContainer.appendChild(span);
             });
-            
-             card.classList.add("bg-white", "dark:bg-darkcard", "shadow-sm");
-             card.classList.remove("bg-gray-50", "dark:bg-gray-800/50");
+            card.classList.add("bg-white", "dark:bg-darkcard", "shadow-sm");
+            card.classList.remove("bg-gray-50", "dark:bg-gray-800/50"); 
         }
         card.appendChild(peopleContainer);
         grid.appendChild(card);
     });
-}
-
-function removeCharacter(id) {
-    if(confirm("정말 삭제하시겠습니까?")) {
-        const charToRemove = state.characters.find(c => c.id === id);
-        if (charToRemove && charToRemove.coupleId) {
-             const partner = state.characters.find(p => p.id === charToRemove.coupleId);
-             if (partner) {
-                 partner.coupleId = null;
-                 partner.couplingDay = null;
-             }
-        }
-
-        state.characters = state.characters.filter(c => c.id !== id);
-        
-        if (state.relationships[id]) {
-            delete state.relationships[id];
-        }
-        
-        Object.keys(state.relationships).forEach(key => {
-            if (state.relationships[key][id]) {
-                delete state.relationships[key][id];
-            }
-        });
-
-        renderRoster();
-        if (document.getElementById('tab-status').classList.contains('active')) {
-             renderHearts();
-             drawRelationshipMap();
-        }
-    }
 }
 
 function renderHearts() {
