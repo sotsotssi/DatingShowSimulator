@@ -191,7 +191,7 @@ function generateActionScript(actionType, isSuccess, actor, target, loc) {
             success: [
                 `${josa(actor.name, '이/가')} ${josa(target.name, '과/와')} 함께 모닥불을 피우고 진솔한 이야기를 나눴습니다.`,
                 `${josa(actor.name, '은/는')} 능숙하게 텐트를 설치하고 ${target.name}에게 맛있는 캠핑 요리를 대접했습니다.`,
-                `${josa(actor.name, '와/과')} ${josa(target.name, '은/는')} 나란히 앉아 밤하늘의 쏟아지는 별을 바라보았습니다.`
+                `${josa(actor.name, '과/와')} ${josa(target.name, '은/는')} 나란히 앉아 밤하늘의 쏟아지는 별을 바라보았습니다.`
             ],
             fail: [
                 `${josa(actor.name, '이/가')} 텐트를 치다가 ${josa(target.name, '을/를')} 쳐 버렸습니다.`,
@@ -204,7 +204,7 @@ function generateActionScript(actionType, isSuccess, actor, target, loc) {
             success: [
                 `${josa(actor.name, '이/가')} ${josa(target.name, '과/와')} 함께 맨발로 해변을 달렸습니다.`,
                 `${josa(actor.name, '은/는')} 예쁜 조개껍데기를 주워 ${target.name}에게 선물했습니다.`,
-                `${josa(actor.name, '와/과')} ${josa(target.name, '은/는')} 파도 소리를 들으며 서로에게 기대어 앉았습니다.`
+                `${josa(actor.name, '과/와')} ${josa(target.name, '은/는')} 파도 소리를 들으며 서로에게 기대어 앉았습니다.`
             ],
             fail: [
                 `${josa(actor.name, '이/가')} ${target.name}에게 물을 너무 심하게 뿌려서 눈에 바닷물이 들어갔습니다.`,
@@ -216,7 +216,7 @@ function generateActionScript(actionType, isSuccess, actor, target, loc) {
          specificActs = {
             success: [
                 `${josa(actor.name, '이/가')} 힘들어하는 ${target.name}의 손을 잡아주며 정상까지 이끌어줬습니다.`,
-                `${josa(actor.name, '와/과')} ${josa(target.name, '은/는')} 정상에서 함께 풍경을 바라보았습니다.`,
+                `${josa(actor.name, '과/와')} ${josa(target.name, '은/는')} 정상에서 함께 풍경을 바라보았습니다.`,
                 `${josa(actor.name, '은/는')} 준비해온 도시락을 ${josa(target.name, '과/와')} 나눠 먹었습니다.`
             ],
             fail: [
@@ -243,7 +243,7 @@ function generateActionScript(actionType, isSuccess, actor, target, loc) {
             success: [
                 `${josa(actor.name, '이/가')} ${josa(target.name, '과/와')} 나란히 앉아 책을 읽다가 조용히 필담을 나눴습니다.`,
                 `${josa(actor.name, '은/는')} ${josa(target.name, '이/가')} 읽고 싶어 하던 책을 높은 곳에서 꺼내주었습니다.`,
-                `${josa(actor.name, '와/과')} ${josa(target.name, '은/는')} 이어폰을 나눠 끼고 조용히 음악과 책을 감상했습니다.`
+                `${josa(actor.name, '과/와')} ${josa(target.name, '은/는')} 이어폰을 나눠 끼고 조용히 음악과 책을 감상했습니다.`
             ],
             fail: [
                 `${josa(actor.name, '이/가')} 책을 읽다 조는 모습을 ${target.name}에게 들켰습니다.`,
@@ -255,7 +255,7 @@ function generateActionScript(actionType, isSuccess, actor, target, loc) {
         specificActs = {
             success: [
                 `${josa(actor.name, '은/는')} 야경이 내려다보이는 자리에서 ${josa(target.name, '과/와')} 함께 칵테일을 마셨습니다.`,
-                `${josa(actor.name, '와/과')} ${josa(target.name, '은/는')} 야경을 배경으로 사진을 남겼습니다.`,
+                `${josa(actor.name, '과/와')} ${josa(target.name, '은/는')} 야경을 배경으로 사진을 남겼습니다.`,
                 `${josa(actor.name, '은/는')} 쌀쌀한 날씨에 ${target.name}에게 겉옷을 벗어주었습니다.`
             ],
             fail: [
@@ -945,7 +945,7 @@ function breakUp(char, partnerId, reason) {
     state.relationships[partner.id][char.id].jealousy = 0;
     state.relationships[char.id][partner.id].cheatCount = 0;
 
-    addLog(`💔 [이별] ${josa(char.name, '와/과')} ${partner.name}은(는) ${reason}로 인해 헤어지게 되었습니다.`);
+    addLog(`💔 [이별] ${josa(char.name, '과/와')} ${partner.name}은(는) ${reason}로 인해 헤어지게 되었습니다.`);
 }
 
 function finishSimulation() {
