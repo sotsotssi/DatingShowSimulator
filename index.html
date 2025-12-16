@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>연애 방송 시뮬레이터</title>
+    <title>연애 프로그램 시뮬레이터</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Tailwind Configuration for Custom Colors/Fonts -->
@@ -94,14 +94,14 @@
             <div id="setupPanel" class="bg-white dark:bg-darkcard rounded-2xl p-6 shadow-lg border border-gray-100 dark:border-gray-700 max-w-4xl mx-auto">
                 <div class="flex justify-between items-center mb-6 border-b border-gray-100 dark:border-gray-700 pb-4">
                     <h2 class="text-lg font-bold flex items-center gap-2">
-                        <span class="material-icons-round text-secondary">settings</span> 시뮬레이션 설정
+                        <span class="material-icons-round text-secondary">settings</span> 시뮬레이션 설정 <span class="text-xs font-normal text-slate-500 dark:text-slate-400 ml-1">중도 변경 불가</span></a>
                     </h2>
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
                     <div class="flex flex-col gap-1">
                         <label class="text-xs font-bold text-gray-500">최대 진행 일수</label>
-                        <input type="number" id="inputMaxDays" placeholder="권장: 80일 / 비워두면 무제한" class="p-3 rounded-xl bg-gray-50 dark:bg-gray-800 border-none focus:ring-2 focus:ring-primary outline-none transition">
+                        <input type="number" id="inputMaxDays" placeholder="권장: 80~100일 / 공란일 시 무제한" class="p-3 rounded-xl bg-gray-50 dark:bg-gray-800 border-none focus:ring-2 focus:ring-primary outline-none transition">
                     </div>
                     <div class="flex items-center gap-2 p-3 bg-gray-50 dark:bg-gray-800 rounded-xl">
                         <input type="checkbox" id="chkCoupleExit" checked class="w-5 h-5 text-primary rounded focus:ring-primary">
@@ -109,7 +109,7 @@
                     </div>
                     <div class="flex items-center gap-2 p-3 bg-gray-50 dark:bg-gray-800 rounded-xl">
                         <input type="checkbox" id="chkAllowAffair" class="w-5 h-5 text-primary rounded focus:ring-primary">
-                        <label for="chkAllowAffair" class="text-sm font-medium cursor-pointer">커플 상태에서 외도 허용</label>
+                        <label for="chkAllowAffair" class="text-sm font-medium cursor-pointer">커플 상태에서 밀회 허용</label>
                     </div>
                 </div>
 
