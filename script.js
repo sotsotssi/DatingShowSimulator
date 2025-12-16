@@ -21,10 +21,10 @@ const compatibilityData = {
 };
 
 const LOCATIONS = [
-    "주방", "테라스", "수영장",
+    "숙소","산책로", "정원", "주방", "테라스", "수영장",
     "공원", "산", "놀이공원", "레스토랑", "카페", "바다",
     "도서관", "영화관", "노래방", "헬스장", "체육관", "루프탑 바", "식물원", "미술관", "쇼핑몰", "캠핑장",
-    "불꽃놀이 축제"
+    "불꽃축제"
 ];
 
 const DEFAULT_NAMES = ["미래", "정원", "성찬", "예찬", "시안", "시우", "하율", "유진", "준혁", "늘담", "서준", "노을", "세라", "정연"];
@@ -585,11 +585,11 @@ function initRelationshipsFor(newChar) {
     state.characters.forEach(other => {
         if (other.id === newChar.id) return;
         if (!state.relationships[newChar.id][other.id]) {
-            state.relationships[newChar.id][other.id] = { affection: 0, jealousy: 0, type: 'acquaintance', cheatCount: 0 };
+            state.relationships[newChar.id][other.id] = { affection: 0, distrust: 0, type: 'acquaintance', cheatCount: 0 };
         }
         if (!state.relationships[other.id]) state.relationships[other.id] = {};
         if (!state.relationships[other.id][newChar.id]) {
-            state.relationships[other.id][newChar.id] = { affection: 0, jealousy: 0, type: 'acquaintance', cheatCount: 0 };
+            state.relationships[other.id][newChar.id] = { affection: 0, distrust: 0, type: 'acquaintance', cheatCount: 0 };
         }
     });
 }
@@ -604,7 +604,14 @@ function processNextDay() {
     }
 
     const activeChars = state.characters.filter(c => c.status !== 'graduated');
-    if (activeChars.length < 2) return alert('최소 2명의 참가자가 필요합니다.');
+    if (activeChars.length < 2) {
+        if (state.ended) {
+            return alert('시뮬레이션이 종료되었습니다. 다시 시작하려면 버튼을 누르세요.');
+        }
+        addLog(`🛑 남은 참가자가 ${activeChars.length}명으로, 더 이상 매칭을 진행할 수 없습니다.`);
+        finishSimulation();
+        return;
+    }
     if (state.ended) return alert('시뮬레이션이 종료되었습니다. 다시 시작하려면 버튼을 누르세요.');
 
     state.day++;
@@ -738,13 +745,13 @@ function getAffectionChange(compScore) {
 }
 
 function triggerEvent(actor, target) {
-    const normalLocs = LOCATIONS.filter(l => l !== "불꽃놀이 축제");
+    const normalLocs = LOCATIONS.filter(l => l !== "불꽃축제");
     let loc = normalLocs[Math.floor(Math.random() * normalLocs.length)];
     let isFireworks = false;
 
     if (state.day > 0 && state.day % 14 === 0) {
         if (Math.random() < 0.7) { 
-            loc = "불꽃놀이 축제";
+            loc = "불꽃축제";
             isFireworks = true;
         }
     }
@@ -770,12 +777,12 @@ function triggerEvent(actor, target) {
         
         if (state.config.allowAffair && Math.random() * 100 < cheatProb) {
              changeAffection(actor.id, target.id, 15);
-             changeJealousy(partner.id, actor.id, 40);
+             changedistrust(partner.id, actor.id, 40);
              const relToPartner = state.relationships[actor.id][partner.id];
              if(!relToPartner.cheatCount) relToPartner.cheatCount = 0;
              relToPartner.cheatCount += 1;
 
-             return `💔 ${josa(actor.name, '이/가')} 연인 ${partner.name} 몰래 ${josa(target.name, '과/와')} ${loc}에서 밀회를 즐겼습니다.`;
+             return `💔 ${josa(actor.name, '이/가')} 연인 ${partner.name} 몰래 ${josa(target.name, '과/와')} ${loc}에서 만남을 가졌습니다.`;
         } else {
              return `🛡️ ${josa(actor.name, '은/는')} ${josa(target.name, '과/와')}의 시간에서 연인 ${partner.name} 생각만 했습니다.`;
         }
@@ -888,10 +895,10 @@ function changeAffection(srcId, tgtId, amount) {
     state.relationships[srcId][tgtId].affection = Math.min(100, Math.max(-100, state.relationships[srcId][tgtId].affection));
 }
 
-function changeJealousy(srcId, tgtId, amount) {
+function changedistrust(srcId, tgtId, amount) {
     if (!state.relationships[srcId][tgtId]) return;
-    state.relationships[srcId][tgtId].jealousy += amount;
-    state.relationships[srcId][tgtId].jealousy = Math.min(100, Math.max(0, state.relationships[srcId][tgtId].jealousy));
+    state.relationships[srcId][tgtId].distrust += amount;
+    state.relationships[srcId][tgtId].distrust = Math.min(100, Math.max(0, state.relationships[srcId][tgtId].distrust));
 }
 
 function checkCouples() {
@@ -918,9 +925,9 @@ function checkCouples() {
             }
 
             const cheatCount = rel.cheatCount || 0; 
-            const partnerJealousy = partnerRel.jealousy; 
+            const partnerdistrust = partnerRel.distrust; 
 
-            if (partnerJealousy >= 80 || cheatCount >= 2) {
+            if (partnerdistrust >= 80 || cheatCount >= 2) {
                  breakUp(c, partnerId, '신뢰 문제');
             }
         }
@@ -941,8 +948,8 @@ function breakUp(char, partnerId, reason) {
     state.relationships[char.id][partner.id].affection = -80;
     state.relationships[partner.id][char.id].affection = -80;
     
-    state.relationships[char.id][partner.id].jealousy = 0;
-    state.relationships[partner.id][char.id].jealousy = 0;
+    state.relationships[char.id][partner.id].distrust = 0;
+    state.relationships[partner.id][char.id].distrust = 0;
     state.relationships[char.id][partner.id].cheatCount = 0;
 
     addLog(`💔 [이별] ${josa(char.name, '과/와')} ${partner.name}은(는) ${reason}로 인해 헤어지게 되었습니다.`);
@@ -1212,12 +1219,12 @@ function renderHearts() {
             if (char.id === other.id) return;
             const rel = state.relationships[char.id][other.id];
             
-            if (Math.abs(rel.affection) >= 20 || rel.jealousy > 10 || rel.type === 'lover' || rel.type === 'ex') {
+            if (Math.abs(rel.affection) >= 20 || rel.distrust > 10 || rel.type === 'lover' || rel.type === 'ex') {
                 const hearts = getHeartString(rel.affection);
                 let statusBadge = '';
                 if (rel.type === 'lover') statusBadge = '<span class="text-xs bg-pink-100 text-pink-600 px-1 rounded">연인</span>';
                 if (rel.type === 'ex') statusBadge = '<span class="text-xs bg-gray-100 text-gray-500 px-1 rounded">전애인</span>';
-                if (rel.jealousy > 40) statusBadge += '<span class="text-xs bg-purple-100 text-purple-600 px-1 rounded ml-1">질투</span>';
+                if (rel.distrust > 40) statusBadge += '<span class="text-xs bg-purple-100 text-purple-600 px-1 rounded ml-1">불신</span>';
                 
                 relHtml += `
                     <div class="flex justify-between items-center text-sm mb-1">
