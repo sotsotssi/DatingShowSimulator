@@ -100,7 +100,7 @@
 
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
                     <div class="flex flex-col gap-1">
-                        <label class="text-xs font-bold text-gray-500">최대 진행 일수</label>
+                        <label for="inputMaxDays" class="text-xs font-bold text-gray-500">최대 진행 일수</label>
                         <input type="number" id="inputMaxDays" placeholder="권장: 80~100일 / 공란일 시 무제한" class="p-3 rounded-xl bg-gray-50 dark:bg-gray-800 border-none focus:ring-2 focus:ring-primary outline-none transition">
                     </div>
                     <div class="flex items-center gap-2 p-3 bg-gray-50 dark:bg-gray-800 rounded-xl">
@@ -123,22 +123,22 @@
                 <input type="hidden" id="editId" value="">
 
                 <div class="grid grid-cols-2 gap-4 mb-4">
-                    <input type="text" id="inputName" placeholder="이름" class="col-span-1 p-3 rounded-xl bg-gray-50 dark:bg-gray-800 border-none focus:ring-2 focus:ring-primary outline-none transition">
-                    <select id="inputMbti" class="col-span-1 p-3 rounded-xl bg-gray-50 dark:bg-gray-800 border-none focus:ring-2 focus:ring-primary outline-none transition">
+                    <input type="text" id="inputName" placeholder="이름" aria-label="참가자 이름 입력" class="col-span-1 p-3 rounded-xl bg-gray-50 dark:bg-gray-800 border-none focus:ring-2 focus:ring-primary outline-none transition">
+                    <select id="inputMbti" aria-label="MBTI 선택" class="col-span-1 p-3 rounded-xl bg-gray-50 dark:bg-gray-800 border-none focus:ring-2 focus:ring-primary outline-none transition">
                     </select>
                 </div>
                 
                 <div class="grid grid-cols-3 gap-2 mb-6">
                     <div class="space-y-1">
-                        <label class="text-xs text-gray-500">매력 <span id="valCharm">5</span></label>
+                        <label for="rangeCharm" class="text-xs text-gray-500">매력 <span id="valCharm">5</span></label>
                         <input type="range" id="rangeCharm" min="1" max="10" value="5" class="w-full accent-primary h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer">
                     </div>
                     <div class="space-y-1">
-                        <label class="text-xs text-gray-500">능력 <span id="valAbility">5</span></label>
+                        <label for="rangeAbility" class="text-xs text-gray-500">능력 <span id="valAbility">5</span></label>
                         <input type="range" id="rangeAbility" min="1" max="10" value="5" class="w-full accent-blue-500 h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer">
                     </div>
                     <div class="space-y-1">
-                        <label class="text-xs text-gray-500">도덕 <span id="valMorality">5</span></label>
+                        <label for="rangeMorality" class="text-xs text-gray-500">도덕 <span id="valMorality">5</span></label>
                         <input type="range" id="rangeMorality" min="1" max="10" value="5" class="w-full accent-green-500 h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer">
                     </div>
                 </div>
@@ -222,7 +222,12 @@
                 <div id="locationGrid" class="flex flex-wrap gap-2 text-sm max-h-[200px] overflow-y-auto">
                 </div>
             </div>
-
+            <!-- Log Controls -->
+            <div class="flex justify-center px-1">
+                <button onclick="clearLogs()" class="text-xs text-gray-400 hover:text-red-500 transition flex items-center gap-1">
+                    <span class="material-icons-round text-sm">delete_sweep</span> 로그 전체 삭제
+                </button>
+            </div>
             <div id="logContainer" class="flex-1 bg-white dark:bg-darkcard rounded-2xl p-5 shadow-inner overflow-y-auto space-y-3 border border-gray-100 dark:border-gray-700 min-h-[300px] max-w-4xl mx-auto w-full">
                 <div class="text-center text-gray-400 mt-10">
                     <span class="material-icons-round text-4xl mb-2">history_edu</span>
