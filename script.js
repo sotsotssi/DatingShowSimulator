@@ -183,7 +183,6 @@ function generateActionScript(actionType, isSuccess, actor, target, loc) {
 
     let script = "";
     
-    // --- LOCATION SPECIFIC SCRIPTS (Expanded) ---
     let specificActs = null;
 
     if (loc === "캠핑장") {
@@ -777,7 +776,7 @@ function triggerEvent(actor, target) {
         
         if (state.config.allowAffair && Math.random() * 100 < cheatProb) {
              changeAffection(actor.id, target.id, 15);
-             changedistrust(partner.id, actor.id, 40);
+             changeDistrust(partner.id, actor.id, 40);
              const relToPartner = state.relationships[actor.id][partner.id];
              if(!relToPartner.cheatCount) relToPartner.cheatCount = 0;
              relToPartner.cheatCount += 1;
@@ -790,7 +789,7 @@ function triggerEvent(actor, target) {
 
     let actionType = getActionType(loc);
     if (isFireworks) actionType = 'date'; 
-    if (isGift) actionType = 'gift'; // Placeholder type
+    if (isGift) actionType = 'gift';
 
 
     let statValue = 0;
@@ -831,7 +830,6 @@ function triggerEvent(actor, target) {
     }
     
     if (isGift) {
-        // -15, -5, +10, +15, +20
         const giftVals = [-15, -5, 10, 15, 20];
         changeValActor = giftVals[giftResult];
         changeValTarget = giftVals[giftResult];
@@ -895,7 +893,7 @@ function changeAffection(srcId, tgtId, amount) {
     state.relationships[srcId][tgtId].affection = Math.min(100, Math.max(-100, state.relationships[srcId][tgtId].affection));
 }
 
-function changedistrust(srcId, tgtId, amount) {
+function changeDistrust(srcId, tgtId, amount) {
     if (!state.relationships[srcId][tgtId]) return;
     state.relationships[srcId][tgtId].distrust += amount;
     state.relationships[srcId][tgtId].distrust = Math.min(100, Math.max(0, state.relationships[srcId][tgtId].distrust));
@@ -912,7 +910,7 @@ function checkCouples() {
             if (state.config.exitOnCouple && c.status === 'active' && partner.status === 'active') {
                 c.status = 'graduated';
                 partner.status = 'graduated';
-                addLog(`🎓 [시스템] ${c.name} ♡ ${partner.name} 커플이 명예롭게 졸업했습니다.`);
+                addLog(`🎓 ${c.name} ♡ ${partner.name} 커플이 명예롭게 졸업했습니다.`);
                 return; 
             }
 
@@ -952,7 +950,7 @@ function breakUp(char, partnerId, reason) {
     state.relationships[partner.id][char.id].distrust = 0;
     state.relationships[char.id][partner.id].cheatCount = 0;
 
-    addLog(`💔 [이별] ${josa(char.name, '과/와')} ${partner.name}은(는) ${reason}로 인해 헤어지게 되었습니다.`);
+    addLog(`💔 [이별] ${josa(char.name, '과/와')} ${josa(partner.name, '은/는')} ${reason}로 인해 헤어지게 되었습니다.`);
 }
 
 function finishSimulation() {
@@ -1299,6 +1297,21 @@ function addLog(message, type = 'normal') {
     state.logs.push({ day: state.day, msg: message });
 }
 
+function clearLogs() {
+    if (!confirm("모든 로그를 삭제하시겠습니까?")) return;
+    
+    state.logs = [];
+    const container = document.getElementById('logContainer');
+    container.innerHTML = '';
+    
+    const placeholder = document.createElement('div');
+    placeholder.className = "text-center text-gray-400 mt-10";
+    placeholder.innerHTML = `
+        <span class="material-icons-round text-4xl mb-2">history_edu</span>
+        <p>로그가 초기화되었습니다.</p>
+    `;
+    container.appendChild(placeholder);
+}
 
 function drawRelationshipMap() {
     const canvas = document.getElementById('relationCanvas');
@@ -1532,14 +1545,18 @@ function downloadData(type) {
     let fileName;
 
     if (type === 'roster') {
-        saveData = state.characters.map(c => ({
-            id: c.id,
-            name: c.name,
-            mbti: c.mbti,
-            charm: c.charm,
-            ability: c.ability,
-            morality: c.morality,
-        }));
+        saveData = {
+            dataType: 'roster',
+            config: state.config,
+            characters: state.characters.map(c => ({
+                id: c.id,
+                name: c.name,
+                mbti: c.mbti,
+                charm: c.charm,
+                ability: c.ability,
+                morality: c.morality,
+            }))
+        };
         fileName = `dating_show_roster.json`;
     } else {
         saveData = state;
@@ -1554,6 +1571,17 @@ function downloadData(type) {
     downloadAnchorNode.click();
     downloadAnchorNode.remove();
 }
+function updateConfigUI() {
+    const inputMaxDays = document.getElementById('inputMaxDays');
+    if(inputMaxDays) inputMaxDays.value = state.config.maxDays === Infinity ? '' : state.config.maxDays;
+    
+    const chkCoupleExit = document.getElementById('chkCoupleExit');
+    if(chkCoupleExit) chkCoupleExit.checked = state.config.exitOnCouple;
+    
+    const chkAllowAffair = document.getElementById('chkAllowAffair');
+    if(chkAllowAffair) chkAllowAffair.checked = state.config.allowAffair;
+}
+
 
 function uploadData(input) {
     const file = input.files[0];
@@ -1562,28 +1590,76 @@ function uploadData(input) {
     reader.onload = function(e) {
         try {
             const loadedData = JSON.parse(e.target.result);
-            if (Array.isArray(loadedData)) {
+            if (Array.isArray(loadedData) || loadedData.dataType === 'roster') {
                 if (confirm("명단 파일이 감지되었습니다. 현재 진행 상황을 초기화하고 명단을 불러오시겠습니까?")) {
+                    const charsToLoad = Array.isArray(loadedData) ? loadedData : loadedData.characters;
+                    
                     state = {
                         day: 0,
                         characters: [],
                         relationships: {},
                         logs: [],
-                        ended: false
+                        ended: false,
+                        config: {
+                            maxDays: Infinity,
+                            exitOnCouple: true,
+                            allowAffair: false
+                        }
                     };
-                    loadedData.forEach(c => {
-                        const newChar = { ...c, coupleId: null, currentLocation: '대기실', currentPair: null };
+
+                    if (!Array.isArray(loadedData) && loadedData.config) {
+                        state.config = loadedData.config;
+                    }
+
+                    charsToLoad.forEach(c => {
+                        const newChar = { 
+                            ...c, 
+                            coupleId: null, 
+                            status: 'active', 
+                            currentLocation: '대기실', 
+                            currentPair: null,
+                            couplingDay: null 
+                        };
                         state.characters.push(newChar);
                         initRelationshipsFor(newChar);
                     });
+
                     document.getElementById('currentDay').innerText = 0;
+                    document.getElementById('progressText').innerText = "준비 중";
+                    document.getElementById('logContainer').innerHTML = '<div class="text-center text-gray-400 mt-10"><span class="material-icons-round text-4xl mb-2">history_edu</span><p>시뮬레이션을 시작하려면 \'다음 날 진행\'을 누르세요.</p></div>';
+                    
+                    updateConfigUI();
                     renderRoster();
                     alert("명단을 성공적으로 불러왔습니다. 새로운 시뮬레이션을 시작하세요.");
                 }
             } else {
                 if (!loadedData.characters || !loadedData.relationships) throw new Error("Invalid Format");
                 state = loadedData;
+                if (state.config && state.config.maxDays === null) {
+                    state.config.maxDays = Infinity;
+                }
+                
                 document.getElementById('currentDay').innerText = state.day;
+                document.getElementById('progressText').innerText = `${state.day}일차`;
+
+                const logContainer = document.getElementById('logContainer');
+                logContainer.innerHTML = '';
+                if(state.logs.length > 0) {
+                     const recentLogs = state.logs.slice(-50);
+                     recentLogs.forEach(logData => {
+                         const msg = logData.msg;
+                         const entry = document.createElement('div');
+                         entry.className = "text-sm p-3 rounded-lg animate-fade-in";
+                         if (msg.includes('💔') || msg.includes('💢')) entry.className += " bg-red-50 dark:bg-red-900/20 text-red-800 dark:text-red-200 border border-red-100 dark:border-red-900/30";
+                         else if (msg.includes('💖') || msg.includes('✨')) entry.className += " bg-pink-50 dark:bg-pink-900/20 text-pink-800 dark:text-pink-200 border border-pink-100 dark:border-pink-900/30";
+                         else if (msg.includes('Day')) entry.className += " bg-gray-100 dark:bg-gray-800 font-bold text-center my-2 text-gray-700 dark:text-gray-300";
+                         else entry.className += " bg-gray-50 dark:bg-[#1f2233] text-gray-700 dark:text-gray-300";
+                         entry.innerText = msg;
+                         logContainer.prepend(entry);
+                     });
+                }
+
+                updateConfigUI();
                 renderRoster();
                 alert("진행 데이터를 성공적으로 불러왔습니다.");
             }
