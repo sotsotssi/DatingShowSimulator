@@ -48,7 +48,9 @@ let state = {
     config: {
         maxDays: Infinity,
         exitOnCouple: true,
-        allowAffair: false
+        allowAffair: false,
+        useGroups: false,
+        groupNames: ['A그룹', 'B그룹']
     }
 };
 
@@ -72,11 +74,14 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
+    // Initialize UI from state config
+    syncConfigToUI();
     renderRoster();
     renderLocationTable();
     
     window.addEventListener('resize', () => {
-        if (document.getElementById('tab-status').classList.contains('active')) {
+        const statusTab = document.getElementById('tab-status');
+        if (statusTab && statusTab.classList.contains('active')) {
             drawRelationshipMap();
         }
     });
@@ -137,6 +142,57 @@ function initCanvasInteraction() {
     });
 }
 
+
+// --- Group Config & Logic ---
+function toggleGroupConfig() {
+    const useGroups = document.getElementById('chkUseGroups').checked;
+    const configArea = document.getElementById('groupConfigArea');
+    const selectArea = document.getElementById('charGroupSelectArea');
+    
+    // Immediate State Update
+    state.config.useGroups = useGroups;
+    
+    if (useGroups) {
+        configArea.classList.remove('hidden');
+        configArea.classList.add('grid');
+        selectArea.classList.remove('hidden');
+    } else {
+        configArea.classList.add('hidden');
+        configArea.classList.remove('grid');
+        selectArea.classList.add('hidden');
+    }
+    updateGroupLabels();
+    renderRoster(); // Re-render roster to show/hide badges immediately
+}
+
+function updateGroupLabels() {
+    const name0 = document.getElementById('inputGroupName0').value || 'A그룹';
+    const name1 = document.getElementById('inputGroupName1').value || 'B그룹';
+    
+    // Immediate State Update
+    state.config.groupNames = [name0, name1];
+
+    document.getElementById('labelGroup0').innerText = name0;
+    document.getElementById('labelGroup1').innerText = name1;
+    renderRoster(); // Re-render roster to update badge text immediately
+}
+
+function syncConfigToUI() {
+    // Helper to sync DOM inputs with state.config on load/reset
+    const chkUseGroups = document.getElementById('chkUseGroups');
+    if(chkUseGroups) {
+        chkUseGroups.checked = state.config.useGroups;
+        toggleGroupConfig(); // sets visibility
+    }
+    
+    if(state.config.groupNames) {
+        const inputG0 = document.getElementById('inputGroupName0');
+        const inputG1 = document.getElementById('inputGroupName1');
+        if(inputG0) inputG0.value = state.config.groupNames[0];
+        if(inputG1) inputG1.value = state.config.groupNames[1];
+        updateGroupLabels();
+    }
+}
 
 function josa(word, format) {
     if (!word) return '';
@@ -437,6 +493,11 @@ function addCharacter() {
     const charm = parseInt(document.getElementById('rangeCharm').value);
     const ability = parseInt(document.getElementById('rangeAbility').value);
     const morality = parseInt(document.getElementById('rangeMorality').value);
+    let groupIndex = 0;
+    if (state.config.useGroups) {
+        const radio = document.querySelector('input[name="charGroup"]:checked');
+        if (radio) groupIndex = parseInt(radio.value);
+    }
 
     const name = nameInput.value.trim();
     if (!name) return alert('이름을 입력해주세요.');
@@ -450,6 +511,7 @@ function addCharacter() {
         charm,
         ability,
         morality,
+        groupIndex,
         coupleId: null,
         status: 'active',
         currentLocation: '대기실',
@@ -474,6 +536,13 @@ function startEditCharacter(id) {
     document.getElementById('valAbility').innerText = char.ability;
     document.getElementById('rangeMorality').value = char.morality;
     document.getElementById('valMorality').innerText = char.morality;
+    if (state.config.useGroups) {
+        const radios = document.getElementsByName('charGroup');
+        radios.forEach(r => {
+            if (parseInt(r.value) === char.groupIndex) r.checked = true;
+        });
+    }
+
     document.getElementById('btnSubmitChar').innerText = "수정완료";
     document.getElementById('btnCancelEdit').classList.remove('hidden');
     document.getElementById('tab-roster').scrollIntoView({ behavior: 'smooth' });
@@ -486,12 +555,19 @@ function updateCharacter(id) {
     if (!name) return alert('이름을 입력해주세요.');
     const duplicate = state.characters.find(c => c.name === name && c.id !== id);
     if (duplicate) return alert('이미 존재하는 이름입니다.');
+    let groupIndex = 0;
+    if (state.config.useGroups) {
+        const radio = document.querySelector('input[name="charGroup"]:checked');
+        if (radio) groupIndex = parseInt(radio.value);
+    }
 
     state.characters[charIndex].name = name;
     state.characters[charIndex].mbti = document.getElementById('inputMbti').value;
     state.characters[charIndex].charm = parseInt(document.getElementById('rangeCharm').value);
     state.characters[charIndex].ability = parseInt(document.getElementById('rangeAbility').value);
     state.characters[charIndex].morality = parseInt(document.getElementById('rangeMorality').value);
+    state.characters[charIndex].groupIndex = groupIndex;
+
 
     resetForm();
     renderRoster();
@@ -527,7 +603,8 @@ function generateRandomRoster() {
         
         const name = availNames[Math.floor(Math.random() * availNames.length)];
         const mbti = MBTI_TYPES[Math.floor(Math.random() * MBTI_TYPES.length)];
-        
+        const groupIndex = state.config.useGroups ? Math.floor(Math.random() * 2) : 0;
+
         const newChar = {
             id: Date.now().toString() + i,
             name,
@@ -535,6 +612,7 @@ function generateRandomRoster() {
             charm: Math.floor(Math.random() * 10) + 1,
             ability: Math.floor(Math.random() * 10) + 1,
             morality: Math.floor(Math.random() * 10) + 1,
+            groupIndex,
             coupleId: null,
             status: 'active',
             currentLocation: '대기실',
@@ -600,6 +678,12 @@ function processNextDay() {
         state.config.maxDays = inputDays ? parseInt(inputDays) : Infinity;
         state.config.exitOnCouple = document.getElementById('chkCoupleExit').checked;
         state.config.allowAffair = document.getElementById('chkAllowAffair').checked;
+        
+        state.config.useGroups = document.getElementById('chkUseGroups').checked;
+        if(state.config.useGroups) {
+             state.config.groupNames[0] = document.getElementById('inputGroupName0').value || 'A그룹';
+             state.config.groupNames[1] = document.getElementById('inputGroupName1').value || 'B그룹';
+        }
     }
 
     const activeChars = state.characters.filter(c => c.status !== 'graduated');
@@ -610,6 +694,15 @@ function processNextDay() {
         addLog(`🛑 남은 참가자가 ${activeChars.length}명으로, 더 이상 매칭을 진행할 수 없습니다.`);
         finishSimulation();
         return;
+    }
+    if (state.config.useGroups) {
+        const group0 = activeChars.filter(c => c.groupIndex === 0).length;
+        const group1 = activeChars.filter(c => c.groupIndex === 1).length;
+        if (group0 === 0 || group1 === 0) {
+             addLog(`🛑 매칭 가능한 상대 그룹이 없어 시뮬레이션을 종료합니다.`);
+             finishSimulation();
+             return;
+        }
     }
     if (state.ended) return alert('시뮬레이션이 종료되었습니다. 다시 시작하려면 버튼을 누르세요.');
 
@@ -647,6 +740,8 @@ function processNextDay() {
         const candidates = shuffledChars.filter(c => c.id !== actor.id && !processedIds.has(c.id));
         
         for (const candidate of candidates) {
+            if (state.config.useGroups && actor.groupIndex === candidate.groupIndex) continue;
+
             if (!state.config.allowAffair && actor.coupleId) {
                 if (candidate.id !== actor.coupleId) continue; 
             }
@@ -1097,12 +1192,18 @@ function renderRoster() {
         
         let statusBadge = '';
         if(char.coupleId) statusBadge = '<span class="text-[10px] bg-pink-100 text-pink-600 px-2 py-0.5 rounded-full ml-2">커플</span>';
+        let groupBadge = '';
+        if (state.config.useGroups) {
+            const groupName = state.config.groupNames[char.groupIndex] || (char.groupIndex === 0 ? 'A' : 'B');
+            groupBadge = `<span class="text-[10px] bg-indigo-100 text-indigo-600 px-2 py-0.5 rounded-full ml-1">${groupName}</span>`;
+        }
 
         card.innerHTML = `
             <div>
                 <div class="font-bold text-lg text-gray-800 dark:text-gray-100 flex items-center gap-2">
                     ${char.name} 
                     <span class="text-xs font-normal text-gray-500 bg-gray-100 dark:bg-gray-700 px-2 py-0.5 rounded-full">${char.mbti}</span>
+                    ${groupBadge}
                     ${statusBadge}
                 </div>
                 <div class="text-xs text-gray-400 mt-1 flex gap-2">
@@ -1555,6 +1656,7 @@ function downloadData(type) {
                 charm: c.charm,
                 ability: c.ability,
                 morality: c.morality,
+                groupIndex: c.groupIndex
             }))
         };
         fileName = `dating_show_roster.json`;
@@ -1580,6 +1682,20 @@ function updateConfigUI() {
     
     const chkAllowAffair = document.getElementById('chkAllowAffair');
     if(chkAllowAffair) chkAllowAffair.checked = state.config.allowAffair;
+    
+    const chkUseGroups = document.getElementById('chkUseGroups');
+    if(chkUseGroups) {
+        chkUseGroups.checked = state.config.useGroups;
+        toggleGroupConfig(); // Update visibility
+    }
+    
+    if(state.config.groupNames) {
+        const inputG0 = document.getElementById('inputGroupName0');
+        const inputG1 = document.getElementById('inputGroupName1');
+        if(inputG0) inputG0.value = state.config.groupNames[0];
+        if(inputG1) inputG1.value = state.config.groupNames[1];
+        updateGroupLabels();
+    }
 }
 
 
@@ -1603,7 +1719,9 @@ function uploadData(input) {
                         config: {
                             maxDays: Infinity,
                             exitOnCouple: true,
-                            allowAffair: false
+                            allowAffair: false,
+                            useGroups: false,
+                            groupNames: ['A그룹', 'B그룹']
                         }
                     };
 
