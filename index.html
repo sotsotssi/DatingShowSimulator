@@ -66,7 +66,7 @@
             <div id="dayDisplay" class="px-3 py-1 bg-gray-100 dark:bg-gray-700 rounded-full text-sm font-semibold">
                 Day <span id="currentDay">0</span>
             </div>
-            <button id="themeToggle" class="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-600 transition">
+            <button id="themeToggle" class="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-600 transition" aria-label="테마 변경">
                 <span class="material-icons-round dark:hidden">dark_mode</span>
                 <span class="material-icons-round hidden dark:block text-yellow-400">light_mode</span>
             </button>
@@ -98,18 +98,38 @@
                     </h2>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
                     <div class="flex flex-col gap-1">
                         <label for="inputMaxDays" class="text-xs font-bold text-gray-500">최대 진행 일수</label>
                         <input type="number" id="inputMaxDays" placeholder="권장: 80~100일 / 공란일 시 무제한" class="p-3 rounded-xl bg-gray-50 dark:bg-gray-800 border-none focus:ring-2 focus:ring-primary outline-none transition">
                     </div>
-                    <div class="flex items-center gap-2 p-3 bg-gray-50 dark:bg-gray-800 rounded-xl">
-                        <input type="checkbox" id="chkCoupleExit" checked class="w-5 h-5 text-primary rounded focus:ring-primary">
-                        <label for="chkCoupleExit" class="text-sm font-medium cursor-pointer">커플 성사 시 졸업</label>
+                    <div class="flex flex-col gap-2">
+                        <div class="flex items-center gap-2 p-3 bg-gray-50 dark:bg-gray-800 rounded-xl">
+                            <input type="checkbox" id="chkCoupleExit" checked class="w-5 h-5 text-primary rounded focus:ring-primary">
+                            <label for="chkCoupleExit" class="text-sm font-medium cursor-pointer">커플 성사 시 졸업</label>
+                        </div>
+                        <div class="flex items-center gap-2 p-3 bg-gray-50 dark:bg-gray-800 rounded-xl">
+                            <input type="checkbox" id="chkAllowAffair" class="w-5 h-5 text-primary rounded focus:ring-primary">
+                            <label for="chkAllowAffair" class="text-sm font-medium cursor-pointer">커플 상태에서 밀회 허용</label>
+                        </div>
                     </div>
-                    <div class="flex items-center gap-2 p-3 bg-gray-50 dark:bg-gray-800 rounded-xl">
-                        <input type="checkbox" id="chkAllowAffair" class="w-5 h-5 text-primary rounded focus:ring-primary">
-                        <label for="chkAllowAffair" class="text-sm font-medium cursor-pointer">커플 상태에서 밀회 허용</label>
+                
+                    <!-- Group Config -->
+                    <div class="md:col-span-2">
+                        <div class="flex items-center gap-2 p-3 bg-gray-50 dark:bg-gray-800 rounded-xl mb-2">
+                            <input type="checkbox" id="chkUseGroups" class="w-5 h-5 text-secondary rounded focus:ring-secondary" onchange="toggleGroupConfig()">
+                            <label for="chkUseGroups" class="text-sm font-medium cursor-pointer">그룹 구분 사용</label>
+                        </div>
+                        <div id="groupConfigArea" class="hidden grid-cols-2 gap-2 pl-2 animate-fade-in">
+                            <div>
+                                <label for="inputGroupName0" class="text-xs text-gray-500">그룹 1 이름</label>
+                                <input type="text" id="inputGroupName0" value="A그룹" class="w-full p-2 text-sm rounded-lg border dark:bg-gray-700 dark:border-gray-600" oninput="updateGroupLabels()">
+                            </div>
+                            <div>
+                                <label for="inputGroupName1" class="text-xs text-gray-500">그룹 2 이름</label>
+                                <input type="text" id="inputGroupName1" value="B그룹" class="w-full p-2 text-sm rounded-lg border dark:bg-gray-700 dark:border-gray-600" oninput="updateGroupLabels()">
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -123,10 +143,31 @@
                 <input type="hidden" id="editId" value="">
 
                 <div class="grid grid-cols-2 gap-4 mb-4">
-                    <input type="text" id="inputName" placeholder="이름" aria-label="참가자 이름 입력" class="col-span-1 p-3 rounded-xl bg-gray-50 dark:bg-gray-800 border-none focus:ring-2 focus:ring-primary outline-none transition">
-                    <select id="inputMbti" aria-label="MBTI 선택" class="col-span-1 p-3 rounded-xl bg-gray-50 dark:bg-gray-800 border-none focus:ring-2 focus:ring-primary outline-none transition">
-                    </select>
+                    <div class="col-span-1">
+                        <label for="inputName" class="sr-only">이름</label>
+                        <input type="text" id="inputName" placeholder="이름" class="w-full p-3 rounded-xl bg-gray-50 dark:bg-gray-800 border-none focus:ring-2 focus:ring-primary outline-none transition">
+                    </div>
+                    <div class="col-span-1">
+                        <label for="inputMbti" class="sr-only">MBTI</label>
+                        <select id="inputMbti" class="w-full p-3 rounded-xl bg-gray-50 dark:bg-gray-800 border-none focus:ring-2 focus:ring-primary outline-none transition">
+                        </select>
+                    </div>
                 </div>
+
+                <div id="charGroupSelectArea" class="hidden mb-4 p-3 bg-indigo-50 dark:bg-indigo-900/30 rounded-xl">
+                    <label class="text-xs font-bold text-indigo-500 mb-2 block">소속 그룹 (같은 그룹끼리 교류하지 않습니다.)</label>
+                    <div class="flex gap-6">
+                        <label class="flex items-center gap-2 cursor-pointer">
+                            <input type="radio" name="charGroup" value="0" checked class="w-4 h-4 text-indigo-600 focus:ring-indigo-500">
+                            <span id="labelGroup0" class="text-sm font-medium">A그룹</span>
+                        </label>
+                        <label class="flex items-center gap-2 cursor-pointer">
+                            <input type="radio" name="charGroup" value="1" class="w-4 h-4 text-indigo-600 focus:ring-indigo-500">
+                            <span id="labelGroup1" class="text-sm font-medium">B그룹</span>
+                        </label>
+                    </div>
+                </div>
+                
                 
                 <div class="grid grid-cols-3 gap-2 mb-6">
                     <div class="space-y-1">
@@ -157,7 +198,7 @@
                 <button onclick="downloadData('full')" class="text-xs flex items-center gap-1 text-gray-500 hover:text-gray-800 dark:hover:text-white px-3 py-2 bg-white dark:bg-darkcard rounded-lg border dark:border-gray-700">
                     <span class="material-icons-round text-sm">save</span> 전체 저장
                 </button>
-                <label class="text-xs flex items-center gap-1 text-gray-500 hover:text-gray-800 dark:hover:text-white px-3 py-2 bg-white dark:bg-darkcard rounded-lg border dark:border-gray-700 cursor-pointer">
+                <label for="fileInput" class="text-xs flex items-center gap-1 text-gray-500 hover:text-gray-800 dark:hover:text-white px-3 py-2 bg-white dark:bg-darkcard rounded-lg border dark:border-gray-700 cursor-pointer">
                     <span class="material-icons-round text-sm">upload</span> 불러오기
                     <input type="file" id="fileInput" class="hidden" onchange="uploadData(this)">
                 </label>
@@ -168,8 +209,11 @@
                 <div id="rosterList" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
                 </div>
                 
-                <div id="graduatedListArea" class="hidden mt-8">
-                    <h3 class="text-lg font-bold px-1 mb-2 text-primary">💖 졸업한 커플</h3>
+                <!-- Graduated Couples List -->
+                <div id="graduatedListArea" class="hidden mt-8 border-t border-gray-100 dark:border-gray-700 pt-6">
+                    <h3 class="text-lg font-bold px-1 mb-4 text-primary flex items-center gap-2">
+                        <span class="material-icons-round">volunteer_activism</span> 졸업한 커플
+                    </h3>
                     <div id="graduatedList" class="grid grid-cols-1 sm:grid-cols-2 gap-3"></div>
                 </div>
             </div>
